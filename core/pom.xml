@@ -1,17 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.ops4j.pax.jms</groupId>
         <version>0.0.1-SNAPSHOT</version>
         <artifactId>parent</artifactId>
-	<relativePath>../parent</relativePath>
+        <relativePath>../parent</relativePath>
     </parent>
-    
-    <artifactId>core</artifactId>
+
+    <artifactId>org.ops4j.pax.jms.core</artifactId>
     <packaging>bundle</packaging>
 
+
     <name>OPS4J Pax JMS core bundle</name>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -20,6 +22,14 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
 
@@ -35,10 +45,47 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
+                    <manifestLocation>META-INF</manifestLocation>
                     <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package></Export-Package>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Include-Resource>OSGI-INF=OSGI-INF,
+                            OSGI-OPT/src=src/main/java
+                        </Include-Resource>
+                        <Service-Component>
+                            OSGI-INF/ReflectiveConfigurationBasedConnectionFactoryProvider.xml,
+                            OSGI-INF/JMSConnectionProvider.xml,
+                            OSGI-INF/MessageListenerHandler.xml
+                        </Service-Component>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>download-licenses</id>
+                        <goals>
+                            <goal>download-licenses</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>first</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <inceptionYear>2013</inceptionYear>
+                            <organizationName>OPS4J</organizationName>
+                            <licenseName>apache_v2</licenseName>
+                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

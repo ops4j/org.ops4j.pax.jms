@@ -14,14 +14,15 @@
     <name>OPS4J Pax JMS Parent POM</name>
 
     <properties>
-	<!-- APIs -->
+        <!-- APIs -->
         <osgi.version>4.3.1</osgi.version>
-        <slf4j.version>1.6.4</slf4j.version>        
+        <slf4j.version>1.6.4</slf4j.version>
+        <jms.version>1.1.1</jms.version>
 
-	<!-- Implementations -->
-	<logback.version>1.0.0</logback.version>
+        <!-- Implementations -->
+        <logback.version>1.0.0</logback.version>
 
-	<!-- Libs -->
+        <!-- Libs -->
     </properties>
 
     <dependencyManagement>
@@ -57,6 +58,11 @@
                 <version>${logback.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${jms.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -85,7 +91,6 @@
                     <artifactId>depends-maven-plugin</artifactId>
                     <version>1.2</version>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>
