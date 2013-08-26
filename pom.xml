@@ -26,6 +26,7 @@
         <module>core</module>
         <module>helper</module>
         <module>examples</module>
+        <module>itest</module>
     </modules>
 
     <licenses>

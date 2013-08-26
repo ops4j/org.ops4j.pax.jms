@@ -28,6 +28,8 @@ import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 
 import org.osgi.service.cm.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This component provides access to a {@link ConnectionFactory} that is created
@@ -44,6 +46,8 @@ import org.osgi.service.cm.ConfigurationException;
  */
 public class ReflectiveConfigurationBasedConnectionFactoryProvider implements ConnectionFactory {
 
+    private static final Logger                      LOG                              = LoggerFactory.getLogger(ReflectiveConfigurationBasedConnectionFactoryProvider.class);
+
     private static final String                      PROPERTY_FACTORY_CLASS           = "org.ops4j.pax.jms.factoryclass";
 
     private static final String                      PROPERTY_FACTORY_PROPERTY_PREFIX = "org.ops4j.pax.jms.property.";
@@ -55,29 +59,31 @@ public class ReflectiveConfigurationBasedConnectionFactoryProvider implements Co
     public void activate(Map<String, ?> properties) throws IllegalArgumentException {
         String factoryClassProperty = (String) properties.get(PROPERTY_FACTORY_CLASS);
         if (factoryClassProperty == null) {
-            throw new IllegalArgumentException(String.format("factory class property %s must be given", PROPERTY_FACTORY_CLASS));
+            throw logAndThrow(String.format("factory class property %s must be given", PROPERTY_FACTORY_CLASS));
         }
         try {
             factoryClass = getClass().getClassLoader().loadClass(factoryClassProperty);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(String.format("factory class '%s' can't be loaded, make sure the package is exported by any bundle", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be loaded, make sure the package is exported by any bundle", factoryClassProperty), e);
+        } catch (NoClassDefFoundError e) {
+            throw logAndThrow(String.format("factory class '%s' can't be loaded, make sure providing bundle imports or embedds all dependencies", factoryClassProperty), e);
         }
         Object factoryInstanceObject;
         try {
             factoryInstanceObject = factoryClass.newInstance();
         } catch (InstantiationException e) {
-            throw new IllegalArgumentException(String.format("factory class '%s' can't be instantiatied, make sure it has a public default constructor present", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be instantiatied, make sure it has a public default constructor present", factoryClassProperty), e);
         } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("factory class '%s' can't be instantiatied, make sure the class is public, has a public default constructor present and can be accessed", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be instantiatied, make sure the class is public, has a public default constructor present and can be accessed", factoryClassProperty), e);
         } catch (RuntimeException e) {
-            throw new IllegalArgumentException(String.format("factory class '%s' can't be instantiatied", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be instantiatied", factoryClassProperty), e);
         }
         final ConnectionFactory connectionFactory;
         if (factoryInstanceObject instanceof ConnectionFactory) {
             connectionFactory = (ConnectionFactory) factoryInstanceObject;
             configureFactory(connectionFactory, properties);
         } else {
-            throw new IllegalArgumentException(String.format("factory class '%s' does not implement %s", factoryClassProperty, ConnectionFactory.class.getName()));
+            throw logAndThrow(String.format("factory class '%s' does not implement %s", factoryClassProperty, ConnectionFactory.class.getName()));
         }
         connectionFactoryReference.set(connectionFactory);
     }
@@ -119,13 +125,13 @@ public class ReflectiveConfigurationBasedConnectionFactoryProvider implements Co
     private static void configureFactory(ConnectionFactory connectionFactory, Map<String, ?> properties) {
         Class<? extends ConnectionFactory> cfc = connectionFactory.getClass();
         Method[] methods = cfc.getMethods();
-        for (Entry<String, ?> entry : properties.entrySet()) {
+        entryLoop: for (Entry<String, ?> entry : properties.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
             if (key.startsWith(PROPERTY_FACTORY_PROPERTY_PREFIX)) {
                 String name = key.substring(PROPERTY_FACTORY_PROPERTY_PREFIX.length());
                 for (Method method : methods) {
-                    if (method.getName().equals("get" + name)) {
+                    if (method.getName().equals("set" + name)) {
                         Class<?>[] types = method.getParameterTypes();
                         if (types.length == 1) {
                             Class<?> type = types[0];
@@ -133,36 +139,49 @@ public class ReflectiveConfigurationBasedConnectionFactoryProvider implements Co
                                 String valueOf = value == null ? "" : String.valueOf(value);
                                 if (String.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, valueOf);
-                                    break;
+                                    continue entryLoop;
                                 }
                                 if (Boolean.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Boolean.valueOf(valueOf));
-                                    break;
+                                    continue entryLoop;
                                 }
                                 if (Long.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Long.valueOf(valueOf));
-                                    break;
+                                    continue entryLoop;
                                 }
                                 if (Integer.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Integer.valueOf(valueOf));
-                                    break;
+                                    continue entryLoop;
                                 }
                                 if (Short.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Short.valueOf(valueOf));
-                                    break;
+                                    continue entryLoop;
                                 }
                             } catch (IllegalAccessException e) {
-                                throw new IllegalArgumentException(String.format("can't access method %s for key %s", method, key), e);
+                                throw logAndThrow(String.format("can't access method %s for key %s", method, key), e);
                             } catch (InvocationTargetException e) {
-                                throw new IllegalArgumentException(String.format("invoking method  %s for key %s failed", method, key), e);
+                                throw logAndThrow(String.format("invoking method  %s for key %s failed", method, key), e);
                             } catch (RuntimeException e) {
-                                throw new IllegalArgumentException(String.format("try to invoking method  %s for key %s failed", method, key), e);
+                                throw logAndThrow(String.format("try to invoking method  %s for key %s failed", method, key), e);
                             }
                         }
                     }
                 }
-                throw new IllegalArgumentException(String.format("no suitable setter method found for 'set%s(...)', make sure it is public and accepts a String, boolean, long, integer or short as its only argument", name));
+                throw logAndThrow(String.format("no suitable setter method found for 'set%s(...)', make sure it is public and accepts a String, boolean, long, integer or short as its only argument", name));
             }
         }
+    }
+
+    private static IllegalArgumentException logAndThrow(String format) {
+        return logAndThrow(format, null);
+    }
+
+    private static IllegalArgumentException logAndThrow(String message, Throwable e) {
+        if (e != null) {
+            LOG.error(message, e);
+        } else {
+            LOG.error(message);
+        }
+        return new IllegalArgumentException(message, e);
     }
 }
