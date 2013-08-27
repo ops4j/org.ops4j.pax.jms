@@ -59,13 +59,6 @@ public class ITestBase {
     @Filter(timeout = 60000)
     protected ConnectionFactory factory;
 
-    @Before
-    public void showMetaInfo() throws JMSException {
-        ConnectionMetaData metaData = connection.getMetaData();
-        LOG.debug("Provider:    {}", metaData.getJMSProviderName());
-        LOG.debug("JMS Version: {}", metaData.getJMSVersion());
-    }
-
     @Configuration
     public Option[] configure() {
         return CoreOptions.options(CoreOptions.junitBundles(),
@@ -97,5 +90,14 @@ public class ITestBase {
         ConfigurationAdminOptions.newConfiguration("org.ops4j.pax.jms.JMSConnectionProvider").asOption(),
         //Open a debug port...
         CoreOptions.systemProperty("osgi.console").value("6080"));
+    }
+
+    @Before
+    public void showMetaInfo() throws JMSException {
+        ConnectionMetaData metaData = connection.getMetaData();
+        LOG.debug("Provider:          {}", metaData.getJMSProviderName());
+        LOG.debug("JMS Version:       {}", metaData.getJMSVersion());
+        LOG.debug("Client ID:         {}", connection.getClientID());
+        LOG.debug("ExceptionListener: {}", connection.getExceptionListener());
     }
 }

@@ -18,6 +18,7 @@
 package org.ops4j.pax.jms.itest;
 
 import javax.jms.Connection;
+import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
@@ -40,4 +41,34 @@ public class SimpleTest extends ITestBase {
         session.close();
     }
 
+    @Test(expected = JMSException.class)
+    public void checkCantCloseSharedConnection() throws JMSException {
+        connection.close();
+    }
+
+    @Test(expected = JMSException.class)
+    public void checkCantsetClientID() throws JMSException {
+        connection.setClientID("huja");
+    }
+
+    @Test(expected = JMSException.class)
+    public void checkCantsetExceptionListener() throws JMSException {
+        connection.setExceptionListener(new ExceptionListener() {
+
+            @Override
+            public void onException(JMSException ex) {
+
+            }
+        });
+    }
+
+    @Test(expected = JMSException.class)
+    public void checkCantstart() throws JMSException {
+        connection.start();
+    }
+
+    @Test(expected = JMSException.class)
+    public void checkCantstop() throws JMSException {
+        connection.stop();
+    }
 }
