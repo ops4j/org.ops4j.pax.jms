@@ -96,7 +96,7 @@ public class MessageListenerHandler {
                 sessionExecutionThread.shutdown();
                 LOG.debug("Gracefull shutdown of MessageListenerHandler done.");
             }
-        });
+        }).start();
     }
 
     protected void setConnection(Connection connection) {
