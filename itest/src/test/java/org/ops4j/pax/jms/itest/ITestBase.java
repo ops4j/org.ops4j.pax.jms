@@ -85,7 +85,13 @@ public class ITestBase {
         // - Configure factory to use
         .put("org.ops4j.pax.jms.factoryclass", "org.apache.activemq.ActiveMQConnectionFactory")
         // - Configure the brocker URL to be a local vm brocker
-        .put("org.ops4j.pax.jms.property.BrokerURL", "vm://itest?create=true")
+        .put("org.ops4j.pax.jms.property.BrokerURL", "vm://itest")
+        // - Also boolean properties can be set ...
+        .put("org.ops4j.pax.jms.property.CopyMessageOnSend", true)
+        //- as well as ints
+        .put("org.ops4j.pax.jms.property.SendTimeout", 0)
+        //- as well as longs
+        .put("org.ops4j.pax.jms.property.WarnAboutUnstartedConnectionTimeout", 1000L)
         // - Convert to Option
         .asOption(),
         // Add Configuration to kickstart Connectionprovider

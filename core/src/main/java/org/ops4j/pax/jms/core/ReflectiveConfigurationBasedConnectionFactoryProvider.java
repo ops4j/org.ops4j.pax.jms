@@ -141,19 +141,19 @@ public class ReflectiveConfigurationBasedConnectionFactoryProvider implements Co
                                     method.invoke(connectionFactory, valueOf);
                                     continue entryLoop;
                                 }
-                                if (Boolean.class.isAssignableFrom(type)) {
+                                if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Boolean.valueOf(valueOf));
                                     continue entryLoop;
                                 }
-                                if (Long.class.isAssignableFrom(type)) {
+                                if (Long.class.isAssignableFrom(type) || long.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Long.valueOf(valueOf));
                                     continue entryLoop;
                                 }
-                                if (Integer.class.isAssignableFrom(type)) {
+                                if (Integer.class.isAssignableFrom(type) || int.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Integer.valueOf(valueOf));
                                     continue entryLoop;
                                 }
-                                if (Short.class.isAssignableFrom(type)) {
+                                if (Short.class.isAssignableFrom(type) || short.class.isAssignableFrom(type)) {
                                     method.invoke(connectionFactory, Short.valueOf(valueOf));
                                     continue entryLoop;
                                 }
