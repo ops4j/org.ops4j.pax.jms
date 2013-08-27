@@ -36,6 +36,12 @@ public class SimpleTest extends ITestBase {
     }
 
     @Test
+    public void createConnectionWithUserAndPasswordTest() throws JMSException {
+        Connection connection = factory.createConnection("admin", "admin");
+        connection.close();
+    }
+
+    @Test
     public void createSessionTest() throws JMSException {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         session.close();
