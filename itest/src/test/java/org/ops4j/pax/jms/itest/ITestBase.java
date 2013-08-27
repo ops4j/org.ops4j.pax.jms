@@ -33,6 +33,7 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.ops4j.pax.exam.util.Filter;
+import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,9 @@ public class ITestBase {
     @Filter(timeout = 60000)
     protected ConnectionFactory factory;
 
+    @Inject
+    protected BundleContext     bundleContext;
+
     @Configuration
     public Option[] configure() {
         return CoreOptions.options(CoreOptions.junitBundles(),
@@ -76,14 +80,12 @@ public class ITestBase {
         .imports("javax.jms", "javax.naming", "javax.net", "javax.management", "javax.management.loading", "javax.management.modelmbean", "javax.management.monitor", "javax.management.openmbean", "javax.management.relation", "javax.management.remote", "javax.management.remote.rmi", "javax.management.timer").start(true),
         //Pax JMS core
         CoreOptions.mavenBundle("org.ops4j.pax.jms", "org.ops4j.pax.jms.core", "0.0.1-SNAPSHOT"),
-        //Pax JMS core
-        CoreOptions.mavenBundle("org.ops4j.pax.jms", "org.ops4j.pax.jms.examples", "0.0.1-SNAPSHOT"),
         // Add Configuration to setup ActiveMQ
         ConfigurationAdminOptions.newConfiguration("org.ops4j.pax.jms.ConfigurationBasedConnectionFactoryProvider")
         // - Configure factory to use
         .put("org.ops4j.pax.jms.factoryclass", "org.apache.activemq.ActiveMQConnectionFactory")
         // - Configure the brocker URL to be a local vm brocker
-        .put("org.ops4j.pax.jms.property.BrokerURL", "vm://itest")
+        .put("org.ops4j.pax.jms.property.BrokerURL", "vm://itest?create=true")
         // - Convert to Option
         .asOption(),
         // Add Configuration to kickstart Connectionprovider
