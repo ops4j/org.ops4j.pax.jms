@@ -72,11 +72,11 @@ public class ReflectiveConfigurationBasedConnectionFactoryProvider implements Co
         try {
             factoryInstanceObject = factoryClass.newInstance();
         } catch (InstantiationException e) {
-            throw logAndThrow(String.format("factory class '%s' can't be instantiatied, make sure it has a public default constructor present", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be instantiated, make sure it has a public default constructor present", factoryClassProperty), e);
         } catch (IllegalAccessException e) {
-            throw logAndThrow(String.format("factory class '%s' can't be instantiatied, make sure the class is public, has a public default constructor present and can be accessed", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be instantiated, make sure the class is public, has a public default constructor present and can be accessed", factoryClassProperty), e);
         } catch (RuntimeException e) {
-            throw logAndThrow(String.format("factory class '%s' can't be instantiatied", factoryClassProperty), e);
+            throw logAndThrow(String.format("factory class '%s' can't be instantiated", factoryClassProperty), e);
         }
         final ConnectionFactory connectionFactory;
         if (factoryInstanceObject instanceof ConnectionFactory) {

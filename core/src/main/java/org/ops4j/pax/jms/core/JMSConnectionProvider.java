@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The connectionprovider uses a {@link ConnectionFactory} and provides a
  * {@link Connection} as a service to other bundles. A
- * {@link JMSConnectionProvider} is (as mentioned in the spec) Threadsave and
+ * {@link JMSConnectionProvider} is (as mentioned in the spec) threadsafe and
  * normaly there is no need for more than one connection.
  * 
  * @author Christoph Läubrich
