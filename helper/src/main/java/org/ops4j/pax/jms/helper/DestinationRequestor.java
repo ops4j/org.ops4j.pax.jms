@@ -36,7 +36,7 @@ import javax.jms.TopicRequestor;
  * {@link QueueRequestor} defined by the JMS spec. It completely works on the
  * generic {@link Destination} interface and use a {@link TemporaryTopic} or
  * {@link TemporaryQueue} for the response. Beside that, it provides a method to
- * request with a given timeout and uses generict to specify the exspected
+ * request with a given timeout and uses generics to specify the expected
  * {@link Message} subtype.
  * 
  * @author Christoph Läubrich

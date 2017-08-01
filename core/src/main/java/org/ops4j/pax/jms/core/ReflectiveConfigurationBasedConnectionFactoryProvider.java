@@ -25,7 +25,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
 import javax.jms.JMSException;
+import javax.jms.JMSRuntimeException;
 
 import org.osgi.service.cm.ConfigurationException;
 import org.slf4j.Logger;
@@ -108,6 +110,42 @@ public class ReflectiveConfigurationBasedConnectionFactoryProvider implements Co
             throw new JMSException("ConnectionFactory disposed");
         }
         return factory.createConnection(username, password);
+    }
+
+    @Override
+    public JMSContext createContext() {
+        ConnectionFactory factory = connectionFactoryReference.get();
+        if (factory == null) {
+            throw new JMSRuntimeException("ConnectionFactory disposed");
+        }
+        return factory.createContext();
+    }
+
+    @Override
+    public JMSContext createContext(int sessionMode) {
+        ConnectionFactory factory = connectionFactoryReference.get();
+        if (factory == null) {
+            throw new JMSRuntimeException("ConnectionFactory disposed");
+        }
+        return factory.createContext(sessionMode);
+    }
+
+    @Override
+    public JMSContext createContext(String userName, String password) {
+        ConnectionFactory factory = connectionFactoryReference.get();
+        if (factory == null) {
+            throw new JMSRuntimeException("ConnectionFactory disposed");
+        }
+        return factory.createContext(userName, password);
+    }
+
+    @Override
+    public JMSContext createContext(String userName, String password, int sessionMode) {
+        ConnectionFactory factory = connectionFactoryReference.get();
+        if (factory == null) {
+            throw new JMSRuntimeException("ConnectionFactory disposed");
+        }
+        return factory.createContext(userName, password, sessionMode);
     }
 
     @Override

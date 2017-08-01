@@ -60,8 +60,28 @@ public class DelegateConnection implements Connection {
     }
 
     @Override
+    public ConnectionConsumer createSharedDurableConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool sessionPool, int maxMessages) throws JMSException {
+        return delegate.createSharedDurableConnectionConsumer(topic, subscriptionName, messageSelector, sessionPool, maxMessages);
+    }
+
+    @Override
+    public ConnectionConsumer createSharedConnectionConsumer(Topic topic, String subscriptionName, String messageSelector, ServerSessionPool sessionPool, int maxMessages) throws JMSException {
+        return delegate.createSharedConnectionConsumer(topic, subscriptionName, messageSelector, sessionPool, maxMessages);
+    }
+
+    @Override
     public Session createSession(boolean transacted, int acknowledgeMode) throws JMSException {
         return delegate.createSession(transacted, acknowledgeMode);
+    }
+
+    @Override
+    public Session createSession(int sessionMode) throws JMSException {
+        return delegate.createSession(sessionMode);
+    }
+
+    @Override
+    public Session createSession() throws JMSException {
+        return delegate.createSession();
     }
 
     @Override

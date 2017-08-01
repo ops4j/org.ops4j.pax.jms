@@ -67,7 +67,8 @@ public class ITestBase {
     public Option[] configure() {
         return CoreOptions.options(CoreOptions.junitBundles(),
         //JMS spec
-        CoreOptions.mavenBundle("org.apache.geronimo.specs", "geronimo-jms_1.1_spec", "1.1.1"),
+        CoreOptions.mavenBundle("org.apache.geronimo.specs", "geronimo-jta_1.1_spec", "1.1.1"),
+        CoreOptions.mavenBundle("org.apache.geronimo.specs", "geronimo-jms_2.0_spec", "1.0-alpha-2"),
         // We require DS
         CoreOptions.mavenBundle("org.apache.felix", "org.apache.felix.scr", "1.6.2").startLevel(1).start(true),
         // and we want CM...
@@ -78,6 +79,8 @@ public class ITestBase {
         .exports("org.apache.activemq")
         // - and import some we require from external...
         .imports("javax.jms", "javax.naming", "javax.net", "javax.management", "javax.management.loading", "javax.management.modelmbean", "javax.management.monitor", "javax.management.openmbean", "javax.management.relation", "javax.management.remote", "javax.management.remote.rmi", "javax.management.timer").start(true),
+        // JSE 8
+        CoreOptions.frameworkProperty("org.osgi.framework.system.capabilities").value("osgi.ee; osgi.ee=\"JavaSE\"; version:List<Version>=\"1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,9.0\""),
         //Pax JMS core
         CoreOptions.mavenBundle("org.ops4j.pax.jms", "org.ops4j.pax.jms.core", "0.0.1-SNAPSHOT"),
         // Add Configuration to setup ActiveMQ

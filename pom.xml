@@ -8,11 +8,13 @@
     <parent>
         <groupId>org.ops4j</groupId>
         <artifactId>master</artifactId>
-        <version>3.2.0</version>
+        <version>4.3.0</version>
     </parent>
 
     <name>OPS4J Pax JMS</name>
-    <description>Pax JMS provides a lightweight bridge between Java Message Service (JMS) and OSGi using Declarative Services and the whiteboard pattern</description>
+    <description>Pax JMS provides a lightweight bridge between Java Message Service (JMS) and OSGi using Declarative
+        Services and the whiteboard pattern
+    </description>
 
     <scm>
         <connection>scm:git:git@github.com:ops4j/org.ops4j.pax.jms.git</connection>
@@ -23,6 +25,11 @@
 
     <modules>
         <module>parent</module>
+        <module>pax-jms-api</module>
+        <module>pax-jms-pool</module>
+        <module>pax-jms-activemq</module>
+        <module>pax-jms-artemis</module>
+        <module>pax-jms-features</module>
         <module>core</module>
         <module>helper</module>
         <module>examples</module>
@@ -34,7 +41,7 @@
             <name>Apache License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
             <comments>
-                Copyright 2013 OPS4J
+                Copyright 2013-2017 OPS4J
 
                 Licensed under the Apache License, Version 2.0 (the "License");
                 you may not use this file except in compliance with the License.
@@ -53,6 +60,19 @@
         </license>
     </licenses>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <issueManagement>
         <system>jira</system>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.ops4j.pax.jms</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+        <artifactId>parent</artifactId>
+        <relativePath>../parent</relativePath>
+    </parent>
+
+    <packaging>feature</packaging>
+    <artifactId>pax-jms-features</artifactId>
+
+    <name>OPS4J Pax JMS Karaf Features</name>
+
+    <description>
+        Pax JMS module creating a features xml file to deploy Pax JMS components as features in Apache Karaf.
+        To use this feature enter the following in your Karaf shell -
+        feature:repo-add mvn:org.ops4j.pax.jms/pax-jms-features/${project.version}/xml/features
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>framework</artifactId>
+            <version>${karaf.version}</version>
+            <type>kar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>enterprise</artifactId>
+            <version>${karaf.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>spring</artifactId>
+            <version>${karaf.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-karaf</artifactId>
+            <version>${activemq.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-features</artifactId>
+            <version>${artemis.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+    </dependencies>
+
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-maven-plugin</artifactId>
+                    <version>${karaf.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <descriptors>
+                            <descriptor>file:${project.build.directory}/feature/feature.xml</descriptor>
+                            <descriptor>mvn:org.apache.karaf.features/spring/${karaf.version}/xml/features</descriptor>
+                            <descriptor>mvn:org.apache.karaf.features/enterprise/${karaf.version}/xml/features</descriptor>
+                            <descriptor>mvn:org.apache.activemq/activemq-karaf/${activemq.version}/xml/features</descriptor>
+                            <descriptor>mvn:org.apache.activemq/artemis-features/${artemis.version}/xml/features</descriptor>
+                        </descriptors>
+                        <framework>
+                            <feature>framework</feature>
+                        </framework>
+                        <features>
+                            <feature>pax-jms-pool</feature>
+                        </features>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+
+</project>

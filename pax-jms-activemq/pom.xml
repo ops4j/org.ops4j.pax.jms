@@ -8,28 +8,20 @@
         <relativePath>../parent</relativePath>
     </parent>
 
-    <artifactId>org.ops4j.pax.jms.core</artifactId>
+    <artifactId>pax-jms-activemq</artifactId>
     <packaging>bundle</packaging>
 
 
-    <name>OPS4J Pax JMS core bundle</name>
+    <name>OPS4J Pax JMS ActiveMQ Support</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
+            <groupId>org.ops4j.pax.jms</groupId>
+            <artifactId>pax-jms-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jms_2.0_spec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
         </dependency>
     </dependencies>
 
@@ -45,19 +37,11 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <manifestLocation>META-INF</manifestLocation>
                     <instructions>
-                        <Export-Package></Export-Package>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Include-Resource>OSGI-INF=OSGI-INF,
-                            OSGI-OPT/src=src/main/java
-                        </Include-Resource>
-                        <Service-Component>
-                            OSGI-INF/ReflectiveConfigurationBasedConnectionFactoryProvider.xml,
-                            OSGI-INF/JMSConnectionProvider.xml,
-                            OSGI-INF/MessageListenerHandler.xml
-                        </Service-Component>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Bundle-Activator>
+                            org.ops4j.pax.jms.activemq.Activator
+                        </Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>
