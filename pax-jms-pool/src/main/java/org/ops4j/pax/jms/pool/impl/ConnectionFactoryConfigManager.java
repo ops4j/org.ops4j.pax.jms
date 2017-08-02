@@ -91,14 +91,14 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     }
 
     private String getCFFFilter(Dictionary config) throws ConfigurationException {
-        String cffName = (String) config.get(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME);
+        String cffName = (String) config.get(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE);
         if (cffName == null) {
             throw new ConfigurationException(null,
                 "Could not determine provider to use. Specify the "
-                    + ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME + " property.");
+                    + ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE + " property.");
         }
         return andFilter(eqFilter("objectClass", ConnectionFactoryFactory.class.getName()),
-                         eqFilter(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, cffName));
+                         eqFilter(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, cffName));
     }
 
     private String eqFilter(String key, String value) {

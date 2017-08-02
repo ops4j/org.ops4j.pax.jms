@@ -27,6 +27,8 @@ public interface ConnectionFactoryFactory {
 
     String JMS_CONNECTIONFACTORY_NAME   = "name";
 
+    String JMS_CONNECTIONFACTORY_TYPE   = "type";
+
     /**
      * The "user" property that ConnectionFactory clients should supply a value for
      * when calling {@link #createConnectionFactory(Map)}.

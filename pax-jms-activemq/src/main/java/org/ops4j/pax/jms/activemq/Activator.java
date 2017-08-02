@@ -31,7 +31,7 @@ public class Activator implements BundleActivator {
     @Override
     public void start(BundleContext context) throws Exception {
         Hashtable<String, Object> props = new Hashtable<>();
-        props.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "activemq");
+        props.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "activemq");
         registration = context.registerService(ConnectionFactoryFactory.class,
                         new ActiveMQConnectionFactoryFactory(),
                         props);
