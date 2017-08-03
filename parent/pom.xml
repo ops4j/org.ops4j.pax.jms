@@ -19,7 +19,7 @@
         <slf4j.version>1.6.4</slf4j.version>
         <jms.version>1.0-alpha-2</jms.version>
 
-        <pax.transx.version>0.2.0-SNAPSHOT</pax.transx.version>
+        <pax.transx.version>0.2.0</pax.transx.version>
         <karaf.version>4.1.1</karaf.version>
         <activemq.version>5.15.0</activemq.version>
         <artemis.version>2.1.0</artemis.version>
