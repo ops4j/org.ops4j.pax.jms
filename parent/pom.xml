@@ -42,19 +42,16 @@
         <pax.transx.version>0.2.0</pax.transx.version>
         <pax.url.version>2.5.2</pax.url.version>
         <equinox.platform.version>3.11.3</equinox.platform.version>
-        <karaf.version>4.1.1</karaf.version>
+        <karaf.version>4.1.2</karaf.version>
         <activemq.version>5.15.0</activemq.version>
         <artemis.version>2.2.0</artemis.version>
         <!-- Spring version from karaf version -->
-        <smx.spring.version>4.3.5.RELEASE_1</smx.spring.version>
+        <smx.spring.version>4.3.10.RELEASE_1</smx.spring.version>
         <blueprint.api.version>1.0.1</blueprint.api.version>
         <blueprint.core.version>1.8.2</blueprint.core.version>
 
         <scr.version>2.0.12</scr.version>
         <configadmin.version>1.8.14</configadmin.version>
-
-        <!-- Implementations -->
-        <logback.version>1.0.0</logback.version>
 
         <!-- Libs -->
         <jasypt.version>1.9.2_1</jasypt.version>
@@ -86,18 +83,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
             </dependency>
 
             <dependency>
