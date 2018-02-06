@@ -18,7 +18,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.JMSRuntimeException;
 import javax.jms.XAConnectionFactory;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * A factory for JMS ConnectionFactory
@@ -28,6 +27,12 @@ public interface ConnectionFactoryFactory {
     String JMS_CONNECTIONFACTORY_NAME   = "name";
 
     String JMS_CONNECTIONFACTORY_TYPE   = "type";
+
+    /**
+     * Specify which protocol to use. For example when using Artemis, the AMQP protocol may be used
+     * by setting the 'amqp' value.
+     */
+    String JMS_CONNECTIONFACTORY_PROTOCOL   = "protocol";
 
     /**
      * The "user" property that ConnectionFactory clients should supply a value for
