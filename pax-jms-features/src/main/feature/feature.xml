@@ -28,6 +28,8 @@
     <feature name="pax-jms-pool" version="${project.version}">
         <feature>pax-transx-jms</feature>
         <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jasypt/${jasypt.version}</bundle>
+        <bundle dependency="true">mvn:org.apache.commons/commons-pool2/2.4.2</bundle>
+        <bundle dependency="true">mvn:org.messaginghub/pooled-jms/${pooled.jms.version}</bundle>
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-api/${project.version}</bundle>
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-pool/${project.version}</bundle>
         <conditional>
