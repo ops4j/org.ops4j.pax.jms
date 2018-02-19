@@ -20,7 +20,7 @@
 
     <parent>
         <groupId>org.ops4j.pax.jms</groupId>
-        <version>0.2.0</version>
+        <version>0.3.0-SNAPSHOT</version>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
     </parent>
