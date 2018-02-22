@@ -30,11 +30,6 @@ public interface ConnectionFactoryFactory {
     String JMS_CONNECTIONFACTORY_TYPE   = "type";
 
     /**
-     * Set to false if pooling is not desired.
-     */
-    String JMS_CONNECTIONFACTORY_POOL   = "pool";
-
-    /**
      * The "user" property that ConnectionFactory clients should supply a value for
      * when calling {@link #createConnectionFactory(Map)}.
      */

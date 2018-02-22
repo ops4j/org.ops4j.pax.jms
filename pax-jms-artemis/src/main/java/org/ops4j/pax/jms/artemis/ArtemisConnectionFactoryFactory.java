@@ -17,13 +17,16 @@ package org.ops4j.pax.jms.artemis;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQXAConnectionFactory;
 import org.apache.activemq.artemis.utils.uri.BeanSupport;
-import org.messaginghub.pooled.jms.JmsPoolConnectionFactory;
-import org.messaginghub.pooled.jms.JmsPoolXAConnectionFactory;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 
+import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.JMSException;
 import javax.jms.JMSRuntimeException;
+import javax.jms.XAConnection;
 import javax.jms.XAConnectionFactory;
+import javax.jms.XAJMSContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,20 +45,7 @@ public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory
         } catch (Exception e) {
             throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis ConnectionFactory").initCause(e);
         }
-
-        String usePool = (String) props.remove(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_POOL);
-        if (usePool !=  null && !Boolean.valueOf(usePool)) {
-            return cf;
-        }
-
-        JmsPoolConnectionFactory poolConnectionFactory = new JmsPoolConnectionFactory();
-        poolConnectionFactory.setConnectionFactory(cf);
-        try {
-            BeanSupport.setData(poolConnectionFactory, props);
-        } catch (Exception e) {
-            throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis Pooled ConnectionFactory").initCause(e);
-        }
-        return poolConnectionFactory;
+        return cf;
     }
 
     @Override
@@ -71,18 +61,14 @@ public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory
         } catch (Exception e) {
             throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis ConnectionFactory").initCause(e);
         }
-        String usePool = (String) props.remove(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_POOL);
-        if (usePool !=  null && !Boolean.valueOf(usePool)) {
-            return xaCf;
-        }
-
-        JmsPoolXAConnectionFactory jmsPoolXAConnectionFactory = new JmsPoolXAConnectionFactory();
-        jmsPoolXAConnectionFactory.setConnectionFactory(xaCf );
-        try {
-            BeanSupport.setData(jmsPoolXAConnectionFactory, props);
-        } catch (Exception e) {
-            throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis Pooled ConnectionFactory").initCause(e);
-        }
-        return jmsPoolXAConnectionFactory;
+        return xaCf;
     }
+
+    private void rename(Map<String, Object> props, String oldName, String newName) {
+        Object t = props.remove(oldName);
+        if (t != null) {
+            props.put(newName, t);
+        }
+    }
+
 }
