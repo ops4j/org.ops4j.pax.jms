@@ -54,7 +54,7 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     }
 
     @Override
-    public void updated(final String pid, final Dictionary config) throws ConfigurationException {
+    public synchronized void updated(final String pid, final Dictionary config) throws ConfigurationException {
         deleted(pid);
         if (config == null) {
             return;
@@ -122,10 +122,16 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     }
 
     @Override
-    public void deleted(String pid) {
+    public synchronized void deleted(String pid) {
         ServiceTracker<?,?> tracker = trackers.remove(pid);
         if (tracker != null) {
             tracker.close();
+        }
+    }
+
+    synchronized void destroy() {
+        for (String pid : trackers.keySet()) {
+            deleted(pid);
         }
     }
 
