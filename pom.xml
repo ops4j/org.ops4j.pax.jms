@@ -98,7 +98,7 @@
         <module>pax-jms-ibmmq</module>
         <module>pax-jms-pool-pooledjms</module>
         <module>pax-jms-pool-narayana</module>
-        <!--<module>pax-jms-pool-transx</module>-->
+        <module>pax-jms-pool-transx</module>
         <!--<module>pax-jms-features</module>-->
     </modules>
 
@@ -111,6 +111,14 @@
                 <groupId>org.ops4j.pax.jms</groupId>
                 <artifactId>pax-jms-api</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- Other pax-* artifacts -->
+
+            <dependency>
+                <groupId>org.ops4j.pax.transx</groupId>
+                <artifactId>pax-transx-jms</artifactId>
+                <version>${pax.transx.version}</version>
             </dependency>
 
             <!-- OSGi -->
