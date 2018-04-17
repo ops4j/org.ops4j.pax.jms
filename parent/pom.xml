@@ -42,7 +42,7 @@
 
         <pax.exam.version>4.11.0</pax.exam.version>
         <pax.logging.version>1.9.1</pax.logging.version>
-        <pax.transx.version>0.2.0</pax.transx.version>
+        <pax.transx.version>0.3.0-SNAPSHOT</pax.transx.version>
         <pax.url.version>2.5.2</pax.url.version>
         <equinox.platform.version>3.11.3</equinox.platform.version>
         <karaf.version>4.1.2</karaf.version>
