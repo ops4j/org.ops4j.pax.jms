@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright 2017 OPS4J
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
 
-        http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -26,13 +31,50 @@
 
     <groupId>org.ops4j.pax</groupId>
     <artifactId>jms</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>OPS4J Pax JMS</name>
-    <description>Pax JMS provides a lightweight bridge between Java Message Service (JMS) and OSGi using Declarative
-        Services and the whiteboard pattern
+    <name>OPS4J Pax JMS (Reactor POM)</name>
+
+    <description>
+        Pax JMS provides a lightweight bridge between Java Message Service (JMS) and OSGi using Configuration Admin
     </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- versions of Maven plugins -->
+
+        <version.plugin.maven-checkstyle-plugin>3.0.0</version.plugin.maven-checkstyle-plugin>
+        <version.com.puppycrawl.tools.checkstyle>8.9</version.com.puppycrawl.tools.checkstyle>
+        <version.plugin.maven-compiler-plugin>3.7.0</version.plugin.maven-compiler-plugin>
+        <version.plugin.maven-surefire-plugin>2.21.0</version.plugin.maven-surefire-plugin>
+        <version.plugin.felix.maven-bundle-plugin>3.5.0</version.plugin.felix.maven-bundle-plugin>
+        <version.plugin.mojo.build-helper-maven-plugin>3.0.0</version.plugin.mojo.build-helper-maven-plugin>
+        <version.plugin.mycila.license-maven-plugin>3.0</version.plugin.mycila.license-maven-plugin>
+        <version.plugin.servicemix.depends-maven-plugin>1.4.0</version.plugin.servicemix.depends-maven-plugin>
+
+        <!-- versions of Maven dependencies -->
+
+        <javax.jms.version>2.0.1</javax.jms.version>
+        <geronimo.specs.jta.version>1.1.1</geronimo.specs.jta.version>
+
+        <osgi.core.version>6.0.0</osgi.core.version>
+        <osgi.compendium.version>5.0.0</osgi.compendium.version>
+        <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
+        <commons.pool2.version>2.4.2</commons.pool2.version>
+        <jasypt.version>1.9.2_1</jasypt.version>
+        <junit.version>4.12</junit.version>
+        <easymock.version>3.4</easymock.version>
+        <logback.version>1.0.9</logback.version>
+        <ops4j.base.version>1.5.0</ops4j.base.version>
+        <pax.exam.version>4.10.0</pax.exam.version>
+        <pax.swissbox.version>1.8.2</pax.swissbox.version>
+        <pax.url.version>2.5.2</pax.url.version>
+        <pax.transx.version>0.3.0-SNAPSHOT</pax.transx.version>
+        <slf4j.version>1.6.4</slf4j.version>
+    </properties>
 
     <scm>
         <connection>scm:git:git@github.com:ops4j/org.ops4j.pax.jms.git</connection>
@@ -42,13 +84,162 @@
     </scm>
 
     <modules>
+        <module>pax-jms-checkstyle-rules</module>
         <module>pax-jms-api</module>
-        <module>pax-jms-pool</module>
-        <module>pax-jms-activemq</module>
-        <module>pax-jms-artemis</module>
-        <module>pax-jms-ibmmq</module>
-        <module>pax-jms-features</module>
+        <module>pax-jms-config</module>
+        <!--<module>pax-jms-pool</module>-->
+        <!--<module>pax-jms-activemq</module>-->
+        <!--<module>pax-jms-artemis</module>-->
+        <!--<module>pax-jms-ibmmq</module>-->
+        <!--<module>pax-jms-features</module>-->
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- pax-jms own artifacts -->
+
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- OSGi -->
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>${osgi.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>${osgi.compendium.version}</version>
+            </dependency>
+
+            <!-- APIs -->
+
+            <dependency>
+                <groupId>javax.jms</groupId>
+                <artifactId>javax.jms-api</artifactId>
+                <version>${javax.jms.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jta_1.1_spec</artifactId>
+                <version>${geronimo.specs.jta.version}</version>
+            </dependency>
+
+            <!-- Logging -->
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- Test -->
+
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>${easymock.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+
+            <!-- Other -->
+
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.jasypt</artifactId>
+                <version>${jasypt.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.plugin.maven-compiler-plugin}</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${version.plugin.felix.maven-bundle-plugin}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <obrRepository>NONE</obrRepository>
+                        <instructions>
+                            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        </instructions>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.servicemix.tooling</groupId>
+                    <artifactId>depends-maven-plugin</artifactId>
+                    <version>${version.plugin.servicemix.depends-maven-plugin}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${version.plugin.maven-checkstyle-plugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
     <licenses>
         <license>
@@ -74,23 +265,12 @@
         </license>
     </licenses>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <url>https://ops4j1.jira.com/wiki/spaces/PAXJMS/overview</url>
+    <inceptionYear>2013</inceptionYear>
 
     <issueManagement>
         <system>jira</system>
-        <url>http://issues.ops4j.org/jira/browse/PAXJMS</url>
+        <url>https://ops4j1.jira.com/projects/PAXJMS/summary/statistics</url>
     </issueManagement>
 
     <developers>
@@ -104,6 +284,115 @@
             </roles>
             <timezone>UTC+1</timezone>
         </developer>
+        <developer>
+            <id>gnodet</id>
+            <name>Guillaume Nodet</name>
+            <email>gnodet@gmail.com</email>
+        </developer>
+        <developer>
+            <id>ggrzybek</id>
+            <name>Grzegorz Grzybek</name>
+            <email>gr.grzybek@gmail.com</email>
+        </developer>
     </developers>
+
+    <profiles>
+        <!-- Checkstyle: `mvn -Pcs validate` -->
+        <profile>
+            <id>cs</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>verify-style</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <configLocation>checkstyle/pax-jms-checks.xml</configLocation>
+                                    <suppressionsLocation>checkstyle/pax-jms-checks-suppressions.xml</suppressionsLocation>
+                                    <includes>org/ops4j/pax/jms/**/*.java</includes>
+                                    <encoding>UTF-8</encoding>
+                                    <consoleOutput>true</consoleOutput>
+                                    <failsOnError>true</failsOnError>
+                                    <failOnViolation>true</failOnViolation>
+                                    <logViolationsToConsole>true</logViolationsToConsole>
+                                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                    <violationSeverity>warning</violationSeverity>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.puppycrawl.tools</groupId>
+                                <artifactId>checkstyle</artifactId>
+                                <version>${version.com.puppycrawl.tools.checkstyle}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.ops4j.pax.jms</groupId>
+                                <artifactId>pax-jms-checkstyle-rules</artifactId>
+                                <version>${project.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- License generation: `mvn -Plicense process-sources` -->
+        <profile>
+            <id>license</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                            <useDefaultExcludes>true</useDefaultExcludes>
+                            <header>license-header.txt</header>
+                            <includes>
+                                <include>src/main/java/**/*.java</include>
+                                <include>src/test/java/**/*.java</include>
+                                <!--<include>**/README</include>-->
+                                <include>pom.xml</include>
+                                <include>**/*.xml</include>
+                                <include>**/*.cfg</include>
+                                <include>**/*.properties</include>
+                            </includes>
+                            <excludes />
+                            <mapping>
+                                <!--<README>SCRIPT_STYLE</README>-->
+                            </mapping>
+                            <headerDefinitions>
+                                <headerDefinition>license-headers.xml</headerDefinition>
+                            </headerDefinitions>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>license-format</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>format</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>license-check</id>
+                                <!-- This is the phase this plugin runs by default. Just an explicit information -->
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

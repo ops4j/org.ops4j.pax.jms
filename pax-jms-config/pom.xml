@@ -31,19 +31,33 @@
     </parent>
 
     <groupId>org.ops4j.pax.jms</groupId>
-    <artifactId>pax-jms-api</artifactId>
+    <artifactId>pax-jms-config</artifactId>
     <packaging>bundle</packaging>
 
-    <name>OPS4J Pax JMS API</name>
+    <name>OPS4J Pax JMS Config</name>
 
     <dependencies>
+        <dependency>
+            <groupId>org.ops4j.pax.jms</groupId>
+            <artifactId>pax-jms-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>javax.jms-api</artifactId>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.jasypt</artifactId>
         </dependency>
     </dependencies>
 
