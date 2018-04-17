@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.ops4j.pax.jms.example.SimpleExampleListener">
-   <implementation class="org.ops4j.pax.jms.example.SimpleExampleListener"/>
-   <service>
-      <provide interface="javax.jms.MessageListener"/>
-   </service>
-   <property name="org.ops4j.pax.jms.consumer.queue" type="String" value="simple.example.queue"/>
-</scr:component>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="start" deactivate="shutdown" modified="configure" name="org.ops4j.pax.jms.MessageListenerHandler">
-   <implementation class="org.ops4j.pax.jms.core.MessageListenerHandler"/>
-   <reference bind="addMessageListener" cardinality="0..n" interface="javax.jms.MessageListener" name="MessageListener" policy="dynamic" unbind="removeMessageListener"/>
-   <reference bind="setConnection" cardinality="1..1" interface="javax.jms.Connection" name="Connection" policy="static"/>
-</scr:component>

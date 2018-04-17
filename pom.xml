@@ -42,17 +42,12 @@
     </scm>
 
     <modules>
-        <module>parent</module>
         <module>pax-jms-api</module>
         <module>pax-jms-pool</module>
         <module>pax-jms-activemq</module>
         <module>pax-jms-artemis</module>
         <module>pax-jms-ibmmq</module>
         <module>pax-jms-features</module>
-        <module>core</module>
-        <module>helper</module>
-        <module>examples</module>
-        <module>itest</module>
     </modules>
 
     <licenses>
