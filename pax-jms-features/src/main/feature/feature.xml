@@ -31,7 +31,7 @@
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-api/${project.version}</bundle>
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-pool/${project.version}</bundle>
         <conditional>
-            <condition>req:type=karaf.feature;filter:="(|(osgi.identity=artemis-jms-client)(osgi.identity=artemis-core))"</condition>
+            <condition>req:type=karaf.feature;filter:="(|(osgi.identity=artemis-jms-client)(osgi.identity=artemis-amqp-client)(osgi.identity=artemis-core))"</condition>
             <bundle>mvn:org.ops4j.pax.jms/pax-jms-artemis/${project.version}</bundle>
         </conditional>
         <conditional>

@@ -17,20 +17,22 @@ package org.ops4j.pax.jms.artemis;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQXAConnectionFactory;
 import org.apache.activemq.artemis.utils.uri.BeanSupport;
+import org.apache.qpid.jms.JmsConnectionFactory;
+import org.apache.qpid.jms.util.PropertyUtil;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSContext;
-import javax.jms.JMSException;
 import javax.jms.JMSRuntimeException;
-import javax.jms.XAConnection;
 import javax.jms.XAConnectionFactory;
-import javax.jms.XAJMSContext;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ArtemisConnectionFactoryFactory.class);
 
     @Override
     public ConnectionFactory createConnectionFactory(Map<String, Object> props) throws JMSRuntimeException {
@@ -39,12 +41,26 @@ public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory
         if (url == null) {
             throw new JMSRuntimeException("The url property must be set");
         }
-        ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory(url);
-        try {
-            BeanSupport.setData(cf, props);
-        } catch (Exception e) {
-            throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis ConnectionFactory").initCause(e);
+        String protocol = (String) props.remove(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_PROTOCOL);
+        ConnectionFactory cf;
+        if ("amqp".equalsIgnoreCase(protocol)) {
+            cf = new JmsConnectionFactory(url);
+            try {
+                Properties properties = new Properties();
+                properties.putAll(props);
+                PropertyUtil.setProperties(cf, properties);
+            } catch (Exception e) {
+                throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis ConnectionFactory").initCause(e);
+            }
+        } else {
+            cf = new ActiveMQConnectionFactory(url);
+            try {
+                BeanSupport.setData(cf, props);
+            } catch (Exception e) {
+                throw (JMSRuntimeException) new JMSRuntimeException("Unable to build Artemis ConnectionFactory").initCause(e);
+            }
         }
+
         return cf;
     }
 
@@ -55,6 +71,11 @@ public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory
         if (url == null) {
             throw new JMSRuntimeException("The url property must be set");
         }
+        String protocol = (String) props.remove(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_PROTOCOL);
+        if ("amqp".equalsIgnoreCase(protocol)) {
+            LOG.trace("XAConnection is not supported when using the amqp protocol. Please check https://issues.apache.org/jira/projects/QPIDJMS/issues/QPIDJMS-206 for more information");
+            return null;
+        }
         ActiveMQXAConnectionFactory xaCf = new ActiveMQXAConnectionFactory(url);
         try {
             BeanSupport.setData(xaCf, props);
@@ -63,12 +84,4 @@ public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory
         }
         return xaCf;
     }
-
-    private void rename(Map<String, Object> props, String oldName, String newName) {
-        Object t = props.remove(oldName);
-        if (t != null) {
-            props.put(newName, t);
-        }
-    }
-
 }
