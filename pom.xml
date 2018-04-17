@@ -60,6 +60,9 @@
         <javax.jms.version>2.0.1</javax.jms.version>
         <geronimo.specs.jta.version>1.1.1</geronimo.specs.jta.version>
 
+        <activemq.version>5.15.3</activemq.version>
+        <artemis.version>2.5.0</artemis.version>
+        <qpid.client.version>0.31.0</qpid.client.version>
         <osgi.core.version>6.0.0</osgi.core.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
@@ -87,10 +90,9 @@
         <module>pax-jms-checkstyle-rules</module>
         <module>pax-jms-api</module>
         <module>pax-jms-config</module>
-        <!--<module>pax-jms-pool</module>-->
-        <!--<module>pax-jms-activemq</module>-->
-        <!--<module>pax-jms-artemis</module>-->
-        <!--<module>pax-jms-ibmmq</module>-->
+        <module>pax-jms-activemq</module>
+        <module>pax-jms-artemis</module>
+        <module>pax-jms-ibmmq</module>
         <!--<module>pax-jms-features</module>-->
     </modules>
 
@@ -151,6 +153,25 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+            </dependency>
+
+            <!-- Broker drivers -->
+
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-client</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>artemis-jms-client</artifactId>
+                <version>${artemis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>qpid-jms-client</artifactId>
+                <version>${qpid.client.version}</version>
             </dependency>
 
             <!-- Other -->
