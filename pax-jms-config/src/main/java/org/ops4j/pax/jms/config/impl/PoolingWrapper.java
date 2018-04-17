@@ -28,22 +28,22 @@ import org.ops4j.pax.jms.service.PooledConnectionFactoryFactory;
 
 public class PoolingWrapper implements ConnectionFactoryFactory {
     
-    private PooledConnectionFactoryFactory pdsf;
-    private ConnectionFactoryFactory dsf;
+    private PooledConnectionFactoryFactory pcff;
+    private ConnectionFactoryFactory cff;
 
-    public PoolingWrapper(PooledConnectionFactoryFactory pdsf, ConnectionFactoryFactory dsf) {
-        this.pdsf = pdsf;
-        this.dsf = dsf;
+    public PoolingWrapper(PooledConnectionFactoryFactory pcff, ConnectionFactoryFactory cff) {
+        this.pcff = pcff;
+        this.cff = cff;
     }
 
     @Override
     public ConnectionFactory createConnectionFactory(Map<String, Object> props) throws JMSRuntimeException {
-        return pdsf.create(dsf, props);
+        return pcff.create(cff, props);
     }
 
     @Override
     public XAConnectionFactory createXAConnectionFactory(Map<String, Object> props) throws JMSRuntimeException {
-        return dsf.createXAConnectionFactory(props);
+        return cff.createXAConnectionFactory(props);
     }
 
 }

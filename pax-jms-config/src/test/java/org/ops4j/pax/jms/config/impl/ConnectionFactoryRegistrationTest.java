@@ -51,28 +51,28 @@ public class ConnectionFactoryRegistrationTest {
     @Test
     public void testPublishedAndUnpublished() throws ConfigurationException,
         InvalidSyntaxException, SQLException {
-        Capture<Map<String, Object>> capturedDsProps = EasyMock.newCapture();
+        Capture<Map<String, Object>> capturedCfProps = EasyMock.newCapture();
         Capture<Dictionary> capturedServiceProps = EasyMock.newCapture();
 
         IMocksControl c = EasyMock.createControl();
         BundleContext context = c.createMock(BundleContext.class);
-        final ConnectionFactoryFactory dsf = c.createMock(ConnectionFactoryFactory.class);
+        final ConnectionFactoryFactory cff = c.createMock(ConnectionFactoryFactory.class);
 
         // Expect that a ConnectionFactory is created using the ConnectionFactoryFactory
-        ConnectionFactory ds = c.createMock(ConnectionFactory.class);
-        expect(dsf.createConnectionFactory(capture(capturedDsProps))).andReturn(ds);
+        ConnectionFactory cf = c.createMock(ConnectionFactory.class);
+        expect(cff.createConnectionFactory(capture(capturedCfProps))).andReturn(cf);
 
         // Expect ConnectionFactory is registered as a service
-        ServiceRegistration dsSreg = c.createMock(ServiceRegistration.class);
+        ServiceRegistration cfSreg = c.createMock(ServiceRegistration.class);
         expect(
-            context.registerService(eq(ConnectionFactory.class.getName()), eq(ds),
-                capture(capturedServiceProps))).andReturn(dsSreg);
+            context.registerService(eq(ConnectionFactory.class.getName()), eq(cf),
+                capture(capturedServiceProps))).andReturn(cfSreg);
 
         // create and publish the ConnectionFactory
         c.replay();
         Dictionary<String, Object> properties = new Hashtable();
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "mycfname");
-        ConnectionFactoryRegistration publisher = new ConnectionFactoryRegistration(context, dsf, properties, properties);
+        ConnectionFactoryRegistration publisher = new ConnectionFactoryRegistration(context, cff, properties, properties);
         c.verify();
 
         // Check that correct properties were set on the ConnectionFactory service
@@ -83,7 +83,7 @@ public class ConnectionFactoryRegistrationTest {
         c.reset();
 
         // Check unpublish unregisters the services
-        dsSreg.unregister();
+        cfSreg.unregister();
         expectLastCall();
 
         c.replay();
@@ -93,29 +93,29 @@ public class ConnectionFactoryRegistrationTest {
 
     @SuppressWarnings("resource")
     @Test
-    public void testPublishedXADS() throws ConfigurationException, InvalidSyntaxException,
+    public void testPublishedXACF() throws ConfigurationException, InvalidSyntaxException,
         SQLException {
 
         IMocksControl c = EasyMock.createControl();
         BundleContext context = c.createMock(BundleContext.class);
-        final ConnectionFactoryFactory dsf = c.createMock(ConnectionFactoryFactory.class);
+        final ConnectionFactoryFactory cff = c.createMock(ConnectionFactoryFactory.class);
 
         // Expect that a ConnectionPoolConnectionFactory is created using the ConnectionFactoryFactory
-        XAConnectionFactory xads = c.createMock(XAConnectionFactory.class);
-        expect(dsf.createXAConnectionFactory(anyObject(Map.class))).andReturn(xads);
+        XAConnectionFactory xacf = c.createMock(XAConnectionFactory.class);
+        expect(cff.createXAConnectionFactory(anyObject(Map.class))).andReturn(xacf);
 
         // Expect ConnectionFactory is registered as a service
-        ServiceRegistration dsSreg = c.createMock(ServiceRegistration.class);
+        ServiceRegistration cfSreg = c.createMock(ServiceRegistration.class);
         expect(
-            context.registerService(eq(XAConnectionFactory.class.getName()), eq(xads),
-                anyObject(Dictionary.class))).andReturn(dsSreg);
+            context.registerService(eq(XAConnectionFactory.class.getName()), eq(xacf),
+                anyObject(Dictionary.class))).andReturn(cfSreg);
 
         // create and publish the ConnectionFactory
         c.replay();
         Dictionary<String, Object> properties = new Hashtable();
         properties.put(ConnectionFactoryRegistration.JNDI_SERVICE_NAME, "test");
         properties.put(ConnectionFactoryRegistration.CONNECTION_FACTORY_TYPE, XAConnectionFactory.class.getSimpleName());
-        new ConnectionFactoryRegistration(context, dsf, properties, properties);
+        new ConnectionFactoryRegistration(context, cff, properties, properties);
         c.verify();
     }
 
@@ -125,14 +125,14 @@ public class ConnectionFactoryRegistrationTest {
 
         IMocksControl c = EasyMock.createControl();
         BundleContext context = c.createMock(BundleContext.class);
-        final ConnectionFactoryFactory dsf = c.createMock(ConnectionFactoryFactory.class);
+        final ConnectionFactoryFactory cff = c.createMock(ConnectionFactoryFactory.class);
 
         // create and publish the ConnectionFactory
         c.replay();
         Dictionary<String, Object> properties = new Hashtable<>();
         properties.put(ConnectionFactoryRegistration.JNDI_SERVICE_NAME, "test");
         properties.put(ConnectionFactoryRegistration.CONNECTION_FACTORY_TYPE, "something else");
-        new ConnectionFactoryRegistration(context, dsf, properties, properties);
+        new ConnectionFactoryRegistration(context, cff, properties, properties);
         c.verify();
     }
 

@@ -24,6 +24,7 @@ import javax.jms.JMSRuntimeException;
 import javax.jms.XAConnectionFactory;
 
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
+import org.ops4j.pax.jms.service.internal.BeanConfig;
 
 public class MQConnectionFactoryFactory implements ConnectionFactoryFactory {
 

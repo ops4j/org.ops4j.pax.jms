@@ -68,6 +68,8 @@
         <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
         <commons.pool2.version>2.4.2</commons.pool2.version>
         <jasypt.version>1.9.2_1</jasypt.version>
+        <jboss.narayana.version>5.6.3.Final</jboss.narayana.version>
+        <jboss.transaction.version>7.5.1.Final</jboss.transaction.version>
         <junit.version>4.12</junit.version>
         <easymock.version>3.4</easymock.version>
         <logback.version>1.0.9</logback.version>
@@ -76,6 +78,7 @@
         <pax.swissbox.version>1.8.2</pax.swissbox.version>
         <pax.url.version>2.5.2</pax.url.version>
         <pax.transx.version>0.3.0-SNAPSHOT</pax.transx.version>
+        <pooledjms.version>0.3.0</pooledjms.version>
         <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
@@ -93,6 +96,9 @@
         <module>pax-jms-activemq</module>
         <module>pax-jms-artemis</module>
         <module>pax-jms-ibmmq</module>
+        <module>pax-jms-pool-pooledjms</module>
+        <module>pax-jms-pool-narayana</module>
+        <!--<module>pax-jms-pool-transx</module>-->
         <!--<module>pax-jms-features</module>-->
     </modules>
 
@@ -180,6 +186,33 @@
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.jasypt</artifactId>
                 <version>${jasypt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.messaginghub</groupId>
+                <artifactId>pooled-jms</artifactId>
+                <version>${pooledjms.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.narayana.jts</groupId>
+                <artifactId>narayana-jts-integration</artifactId>
+                <version>${jboss.narayana.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-transaction-spi</artifactId>
+                <version>${jboss.transaction.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.spec.javax.resource</groupId>
+                        <artifactId>jboss-connector-api_1.7_spec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.spec.javax.transaction</groupId>
+                        <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>
@@ -372,6 +405,7 @@
                     <plugin>
                         <groupId>com.mycila</groupId>
                         <artifactId>license-maven-plugin</artifactId>
+                        <version>${version.plugin.mycila.license-maven-plugin}</version>
                         <configuration>
                             <aggregate>true</aggregate>
                             <useDefaultExcludes>true</useDefaultExcludes>

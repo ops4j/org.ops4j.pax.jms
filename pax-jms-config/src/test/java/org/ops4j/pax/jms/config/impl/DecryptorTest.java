@@ -41,16 +41,16 @@ public class DecryptorTest {
 
     @Test
     public void testDecryptWithNoEncryptedProperties() {
-        Dictionary dsProps = new Hashtable<>();
-        dsProps.put("dataSourceName", "testDS");
-        dsProps.put("timeout", 2000);
+        Dictionary cfProps = new Hashtable<>();
+        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("timeout", 2000);
 
         Decryptor decryptor = new Decryptor(getEncryptor());
-        Dictionary decryptedConfig = decryptor.decrypt(dsProps);
+        Dictionary decryptedConfig = decryptor.decrypt(cfProps);
 
         for (Enumeration e = decryptedConfig.keys(); e.hasMoreElements();) {
             String key = (String)e.nextElement();
-            String expectedValue = String.valueOf(dsProps.get(key));
+            String expectedValue = String.valueOf(cfProps.get(key));
             String actualValue = String.valueOf(decryptedConfig.get(key));
             assertEquals(expectedValue, actualValue);
         }
@@ -65,15 +65,15 @@ public class DecryptorTest {
         final StringEncryptor testStringEnryptor = getEncryptor();
         String encryptedPassword = testStringEnryptor.encrypt(myPassword);
 
-        Dictionary dsProps = new Hashtable<>();
-        dsProps.put("dataSourceName", "testDS");
-        dsProps.put("password", "ENC(" + encryptedPassword + ")");
-        dsProps.put("timeout", 2000);
+        Dictionary cfProps = new Hashtable<>();
+        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("password", "ENC(" + encryptedPassword + ")");
+        cfProps.put("timeout", 2000);
 
         Decryptor decryptor = new Decryptor(testStringEnryptor);
-        Dictionary decryptedConfig = decryptor.decrypt(dsProps);
+        Dictionary decryptedConfig = decryptor.decrypt(cfProps);
 
-        assertEquals("testDS", decryptedConfig.get("dataSourceName"));
+        assertEquals("testCF", decryptedConfig.get("connectionFactoryName"));
         assertEquals("password", decryptedConfig.get("password"));
         assertEquals("2000", decryptedConfig.get("timeout"));
     }
@@ -85,34 +85,34 @@ public class DecryptorTest {
         final StringEncryptor testStringEnryptor = getEncryptor();
         String encryptedPassword = testStringEnryptor.encrypt(myPassword);
 
-        Dictionary dsProps = new Hashtable<>();
-        dsProps.put("dataSourceName", "testDS");
-        dsProps.put("password", "ENC(" + encryptedPassword + ", " + alias + ")");
-        dsProps.put("timeout", 2000);
+        Dictionary cfProps = new Hashtable<>();
+        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("password", "ENC(" + encryptedPassword + ", " + alias + ")");
+        cfProps.put("timeout", 2000);
 
         Decryptor decryptor = new Decryptor(testStringEnryptor);
-        Dictionary decryptedConfig = decryptor.decrypt(dsProps);
+        Dictionary decryptedConfig = decryptor.decrypt(cfProps);
 
-        assertEquals("testDS", decryptedConfig.get("dataSourceName"));
+        assertEquals("testCF", decryptedConfig.get("connectionFactoryName"));
         assertEquals("password", decryptedConfig.get("password"));
         assertEquals("2000", decryptedConfig.get("timeout"));
     }
 
     @Test
     public void testDecryptWithEncryptedPropertiesAndUnknownAlias() {
-        Dictionary dsProps = new Hashtable<>();
-        dsProps.put("dataSourceName", "testDS");
-        dsProps.put("password", "ENC(something,testAlias)");
-        dsProps.put("timeout", 2000);
-        Assert.assertEquals("testAlias", Decryptor.getAlias(dsProps));
+        Dictionary cfProps = new Hashtable<>();
+        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("password", "ENC(something,testAlias)");
+        cfProps.put("timeout", 2000);
+        Assert.assertEquals("testAlias", Decryptor.getAlias(cfProps));
     }
     
     @Test(expected = RuntimeException.class)
     public void testDecryptWithTwoDifferentAliases() {
-        Dictionary dsProps = new Hashtable<>();
-        dsProps.put("password", "ENC(something,testAlias)");
-        dsProps.put("password2", "ENC(something,testAlias2)");
-        Decryptor.getAlias(dsProps);
+        Dictionary cfProps = new Hashtable<>();
+        cfProps.put("password", "ENC(something,testAlias)");
+        cfProps.put("password2", "ENC(something,testAlias2)");
+        Decryptor.getAlias(cfProps);
     }
 
     @Test

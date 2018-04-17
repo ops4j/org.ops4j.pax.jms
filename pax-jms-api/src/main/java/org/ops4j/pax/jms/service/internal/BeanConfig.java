@@ -16,17 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.ops4j.pax.jms.ibmmq;
+package org.ops4j.pax.jms.service.internal;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
+
 /**
  * Configure a java bean from a given Map of properties.
  */
 public class BeanConfig {
+
+    protected static final String POOL_PREFIX = "pool.";
+    protected static final String FACTORY_PREFIX = "factory.";
 
     private Object bean;
     private Map<String, Method> setters;
@@ -104,6 +109,32 @@ public class BeanConfig {
             throw new IllegalArgumentException("Error setting property " + key + ":"
                 + e.getMessage(), e);
         }
+    }
+
+    public static Map<String, Object> getNonPoolProps(Map<String, Object> props) {
+        Map<String, Object> properties = new HashMap<>();
+        for (String key : props.keySet()) {
+            if (!key.startsWith(POOL_PREFIX) && !key.startsWith(FACTORY_PREFIX)) {
+                properties.put(key, props.get(key));
+            }
+        }
+        properties.remove(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME);
+        return properties;
+    }
+
+    public static Map<String, Object> getPoolProps(Map<String, Object> props) {
+        return getPrefixed(props, POOL_PREFIX);
+    }
+
+    static Map<String, Object> getPrefixed(Map<String, Object> props, String prefix) {
+        Map<String, Object> prefixedProps = new HashMap<String, Object>();
+        for (String key : props.keySet()) {
+            if (key.startsWith(prefix)) {
+                String strippedKey = key.substring(prefix.length());
+                prefixedProps.put(strippedKey, props.get(key));
+            }
+        }
+        return prefixedProps;
     }
 
 }

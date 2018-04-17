@@ -68,9 +68,7 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Export-Package>
-                            org.ops4j.pax.jms.service
-                        </Export-Package>
+                        <Bundle-Activator>org.ops4j.pax.jms.config.impl.Activator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>

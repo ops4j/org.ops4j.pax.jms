@@ -69,20 +69,20 @@ public class ConnectionFactoryConfigManagerTest {
 
     @Test
     public void testUpdatedAndDeleted() throws Exception {
-        ConnectionFactoryFactory dsf = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
-        ConnectionFactory ds = expectConnectionFactoryCreated(dsf);
-        ServiceRegistration sreg = expectRegistration(ds);
+        ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        ConnectionFactory cf = expectConnectionFactoryCreated(cff);
+        ServiceRegistration sreg = expectRegistration(cf);
 
         Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(ConnectionFactoryRegistration.JNDI_SERVICE_NAME, "test");
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "mycfname");
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "artemis");
 
-        ConnectionFactoryConfigManager dsManager = new ConnectionFactoryConfigManager(context);
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
 
         // Test config created
         c.replay();
-        dsManager.updated(TESTPID, properties);
+        cfManager.updated(TESTPID, properties);
 
         c.verify();
 
@@ -95,23 +95,23 @@ public class ConnectionFactoryConfigManagerTest {
         expect(context.ungetService(anyObject(ServiceReference.class))).andReturn(true).atLeastOnce();
         // Test config removed
         c.replay();
-        dsManager.updated(TESTPID, null);
+        cfManager.updated(TESTPID, null);
 
         c.verify();
     }
 
     @Test
     public void testEncryptor() throws Exception {
-        final ConnectionFactoryFactory dsf = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
-        ConnectionFactory ds = c.createMock(ConnectionFactory.class);
+        final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        ConnectionFactory cf = c.createMock(ConnectionFactory.class);
         Capture<Map<String, Object>> capturedProps = newCapture();
-        expect(dsf.createConnectionFactory(EasyMock.capture(capturedProps))).andReturn(ds);
-        expectRegistration(ds);
+        expect(cff.createConnectionFactory(EasyMock.capture(capturedProps))).andReturn(cf);
+        expectRegistration(cf);
 
         StringEncryptor encryptor = expectTracked(c, context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
         expect(encryptor.decrypt("ciphertext")).andReturn("password");
 
-        ConnectionFactoryConfigManager dsManager = new ConnectionFactoryConfigManager(context);
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
 
         // Test config created
         c.replay();
@@ -120,7 +120,7 @@ public class ConnectionFactoryConfigManagerTest {
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "artemis");
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "mycfname");
         properties.put(ConnectionFactoryFactory.JMS_PASSWORD, "ENC(ciphertext)");
-        dsManager.updated(TESTPID, properties);
+        cfManager.updated(TESTPID, properties);
         c.verify();
 
         // the encrypted value is still encrypted
@@ -131,10 +131,10 @@ public class ConnectionFactoryConfigManagerTest {
 
     @Test
     public void testEncryptorWithExternalSecret() throws Exception {
-        final ConnectionFactoryFactory dsf = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
-        ConnectionFactory ds = expectConnectionFactoryCreated(dsf);
-        expectRegistration(ds);
-        ConnectionFactoryConfigManager dsManager = new ConnectionFactoryConfigManager(context);
+        final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        ConnectionFactory cf = expectConnectionFactoryCreated(cff);
+        expectRegistration(cf);
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
         StringEncryptor encryptor = expectTracked(c, context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
         expect(encryptor.decrypt("ciphertext")).andReturn("password");
 
@@ -148,7 +148,7 @@ public class ConnectionFactoryConfigManagerTest {
         String externalEncryptedValue = "FILE(" + ExternalConfigLoaderTest
                 .createExternalSecret("ENC(ciphertext)") + ")";
         properties.put(ConnectionFactoryFactory.JMS_PASSWORD, externalEncryptedValue);
-        dsManager.updated(TESTPID, properties);
+        cfManager.updated(TESTPID, properties);
         c.verify();
 
         // the encrypted/external value is still encrypted/external
@@ -165,9 +165,9 @@ public class ConnectionFactoryConfigManagerTest {
      */
     @Test
     public void testHiddenAndPropagation() throws Exception {
-        final ConnectionFactoryFactory dsf = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
 
-        final String keyHiddenJdbcPassword = "." + ConnectionFactoryFactory.JMS_PASSWORD;
+        final String keyHiddenJmsPassword = "." + ConnectionFactoryFactory.JMS_PASSWORD;
         final String keyNonlocalProperty = "nonlocal.property";
         final String keyLocalProperty = "localproperty";
         final String keyConnectionFactoryType = "ConnectionFactoryType";
@@ -184,7 +184,7 @@ public class ConnectionFactoryConfigManagerTest {
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, cfname);
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "artemis");
         properties.put(ConnectionFactoryFactory.JMS_USER, user);
-        properties.put(keyHiddenJdbcPassword, password);
+        properties.put(keyHiddenJmsPassword, password);
         properties.put(keyLocalProperty, valueLocalProperty);
         properties.put(keyNonlocalProperty, "something");
         properties.put(keyPoolProperty, poolMaxTotal);
@@ -204,19 +204,19 @@ public class ConnectionFactoryConfigManagerTest {
         expectedConnectionFactoryProperties.put(keyPoolProperty, poolMaxTotal);
         expectedConnectionFactoryProperties.put(keyFactoryProperty, factoryPoolStatements);
 
-        ConnectionFactory ds = expectConnectionFactoryCreated(dsf);
+        ConnectionFactory cf = expectConnectionFactoryCreated(cff);
 
         Hashtable<String, String> expectedServiceProperties = (Hashtable<String, String>) properties.clone();
-        expectedServiceProperties.remove(keyHiddenJdbcPassword);
+        expectedServiceProperties.remove(keyHiddenJmsPassword);
         expectedServiceProperties.put("osgi.jndi.service.name", valueConnectionFactoryName);
         ServiceRegistration sreg = c.createMock(ServiceRegistration.class);
-        expect(context.registerService(anyString(), eq(ds), eq(expectedServiceProperties))).andReturn(sreg);
+        expect(context.registerService(anyString(), eq(cf), eq(expectedServiceProperties))).andReturn(sreg);
 
-        ConnectionFactoryConfigManager dsManager = new ConnectionFactoryConfigManager(context);
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
 
         // Test config created
         c.replay();
-        dsManager.updated(TESTPID, properties);
+        cfManager.updated(TESTPID, properties);
         c.verify();
     }
 
@@ -234,15 +234,15 @@ public class ConnectionFactoryConfigManagerTest {
         return serviceMock;
     }
 
-    private ConnectionFactory expectConnectionFactoryCreated(final ConnectionFactoryFactory dsf) throws SQLException {
-        ConnectionFactory ds = c.createMock(ConnectionFactory.class);
-        expect(dsf.createConnectionFactory(anyObject(Map.class))).andReturn(ds);
-        return ds;
+    private ConnectionFactory expectConnectionFactoryCreated(final ConnectionFactoryFactory cff) throws SQLException {
+        ConnectionFactory cf = c.createMock(ConnectionFactory.class);
+        expect(cff.createConnectionFactory(anyObject(Map.class))).andReturn(cf);
+        return cf;
     }
 
-    private ServiceRegistration expectRegistration(ConnectionFactory ds) {
+    private ServiceRegistration expectRegistration(ConnectionFactory cf) {
         ServiceRegistration sreg = c.createMock(ServiceRegistration.class);
-        expect(context.registerService(anyString(), eq(ds), anyObject(Dictionary.class))).andReturn(sreg);
+        expect(context.registerService(anyString(), eq(cf), anyObject(Dictionary.class))).andReturn(sreg);
         return sreg;
     }
 

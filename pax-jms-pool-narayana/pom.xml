@@ -31,24 +31,45 @@
     </parent>
 
     <groupId>org.ops4j.pax.jms</groupId>
-    <artifactId>pax-jms-artemis</artifactId>
+    <artifactId>pax-jms-pool-narayana</artifactId>
     <packaging>bundle</packaging>
 
-    <name>OPS4J Pax JMS Artemis Support</name>
+    <name>OPS4J Pax JMS MessagingHub JMS Pool implementation</name>
+
+    <description>org.messaginghub:pooled-jms based JMS pool with XA Recovery for Narayana Transaction Manager</description>
 
     <dependencies>
         <dependency>
             <groupId>org.ops4j.pax.jms</groupId>
             <artifactId>pax-jms-api</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>artemis-jms-client</artifactId>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.qpid</groupId>
-            <artifactId>qpid-jms-client</artifactId>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.1_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.messaginghub</groupId>
+            <artifactId>pooled-jms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-transaction-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.narayana.jts</groupId>
+            <artifactId>narayana-jts-integration</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -59,7 +80,11 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>org.ops4j.pax.jms.artemis.Activator</Bundle-Activator>
+                        <Bundle-Activator>org.ops4j.pax.jms.pool.narayana.Activator</Bundle-Activator>
+                        <Private-Package>
+                            org.ops4j.pax.jms.pool.narayana,
+                            org.ops4j.pax.jms.service.internal
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

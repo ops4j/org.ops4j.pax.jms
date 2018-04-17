@@ -60,7 +60,7 @@ public interface ConnectionFactoryFactory {
     /**
      * Create a new {@code ConnectionFactory} using the given properties.
      *
-     * @param props The properties used to configure the {@code ConnectionFactory} .
+     * @param props The properties used to configure the {@code ConnectionFactory}.
      *        {@code null} indicates no properties. Properties defined in this interface may be used, but other
      *        properties will be handled reflectively.
      * @return A configured {@code ConnectionFactory}.
@@ -69,12 +69,12 @@ public interface ConnectionFactoryFactory {
     ConnectionFactory createConnectionFactory(Map<String, Object> props) throws JMSRuntimeException;
 
     /**
-     * Create a new {@code ConnectionPoolDataSource} using the given properties.
+     * Create a new {@code XAConnectionFactory} using the given properties.
      *
-     * @param props The properties used to configure the {@code XAConnectionFactory}
+     * @param props The properties used to configure the {@code XAConnectionFactory}.
      *        {@code null} indicates no properties. Properties defined in this interface may be used, but other
      *        properties will be handled reflectively.
-     * @return A configured {@code ConnectionPoolDataSource}.
+     * @return A configured {@code XAConnectionFactory}.
      * @throws JMSRuntimeException If the {@code XAConnectionFactory} cannot be created.
      */
     XAConnectionFactory createXAConnectionFactory(Map<String, Object> props) throws JMSRuntimeException;

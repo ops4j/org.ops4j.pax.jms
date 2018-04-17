@@ -36,18 +36,18 @@ public class ExternalConfigLoaderTest {
     @Test
     public void testNoExternalConfig() {
         final Map<String, Object> expectedProps = new Hashtable<>();
-        expectedProps.put("dataSourceName", "testDS");
+        expectedProps.put("connectionFactoryName", "testCF");
         expectedProps.put("timeout", 2000);
         
-        Dictionary<String, Object> dsProps = new Hashtable<String, Object>(expectedProps);
+        Dictionary<String, Object> cfProps = new Hashtable<String, Object>(expectedProps);
 
         final ExternalConfigLoader externalConfigLoader = new ExternalConfigLoader();
-        externalConfigLoader.resolve(dsProps);
+        externalConfigLoader.resolve(cfProps);
 
-        for (Enumeration<String> e = dsProps.keys(); e.hasMoreElements();) {
+        for (Enumeration<String> e = cfProps.keys(); e.hasMoreElements();) {
             String key = e.nextElement();
             String expectedValue = String.valueOf(expectedProps.get(key));
-            String actualValue = String.valueOf(dsProps.get(key));
+            String actualValue = String.valueOf(cfProps.get(key));
             assertEquals(expectedValue, actualValue);
         }
     }
@@ -56,22 +56,22 @@ public class ExternalConfigLoaderTest {
     public void testExternalConfig() {
         final String myExternalPassword = createExternalSecret("password");
 
-        Dictionary<String, Object> dsProps = new Hashtable<>();
-        dsProps.put("dataSourceName", "testDS");
-        dsProps.put("password", "FILE(" + myExternalPassword + ")");
-        dsProps.put("timeout", 2000);
+        Dictionary<String, Object> cfProps = new Hashtable<>();
+        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("password", "FILE(" + myExternalPassword + ")");
+        cfProps.put("timeout", 2000);
 
         final ExternalConfigLoader externalConfigLoader = new ExternalConfigLoader();
-        Dictionary<String, Object> loaded = externalConfigLoader.resolve(dsProps);
+        Dictionary<String, Object> loaded = externalConfigLoader.resolve(cfProps);
 
-        assertEquals("testDS", loaded.get("dataSourceName"));
+        assertEquals("testCF", loaded.get("connectionFactoryName"));
         assertEquals("password", loaded.get("password"));
         assertEquals(2000, loaded.get("timeout"));
     }
 
     public static String createExternalSecret(final String value) {
         try {
-            final File file = File.createTempFile("externalPaxJdbcConfig-", ".secret");
+            final File file = File.createTempFile("externalPaxJmsConfig-", ".secret");
             file.deleteOnExit();
             
             System.out.println("CREATED SECRET: " + file.getAbsolutePath());
