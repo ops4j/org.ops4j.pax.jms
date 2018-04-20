@@ -81,7 +81,7 @@
         <pax.exam.version>4.10.0</pax.exam.version>
         <pax.swissbox.version>1.8.2</pax.swissbox.version>
         <pax.url.version>2.5.2</pax.url.version>
-        <pax.transx.version>0.3.0-SNAPSHOT</pax.transx.version>
+        <pax.transx.version>0.3.0</pax.transx.version>
         <pooledjms.version>0.3.0</pooledjms.version>
         <slf4j.version>1.6.4</slf4j.version>
     </properties>
