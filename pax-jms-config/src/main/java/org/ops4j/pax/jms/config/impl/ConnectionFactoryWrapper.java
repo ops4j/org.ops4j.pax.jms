@@ -18,6 +18,7 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;

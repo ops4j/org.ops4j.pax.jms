@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.ops4j.pax.jms.service.internal.BeanConfig.getNonPoolProps;
+import static org.ops4j.pax.jms.service.internal.BeanConfig.getPoolProps;
 
 public class TransxPooledConnectionFactoryFactory implements PooledConnectionFactoryFactory {
 
@@ -42,6 +43,7 @@ public class TransxPooledConnectionFactoryFactory implements PooledConnectionFac
             ConnectionFactory mcf = ManagedConnectionFactoryBuilder.builder()
                     .connectionFactory(cf, null)
                     .transaction(TransactionSupport.TransactionSupportLevel.NoTransaction)
+                    .properties(getPoolProps(props))
                     .build();
             // TODO: configure more
             return mcf;

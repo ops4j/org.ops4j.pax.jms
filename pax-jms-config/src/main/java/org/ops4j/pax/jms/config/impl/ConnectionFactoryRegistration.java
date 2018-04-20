@@ -55,6 +55,7 @@ public class ConnectionFactoryRegistration implements Closeable {
     // forwarded.
     private static final Set<String> NOT_FORWARDED_KEYS = new HashSet<>(Arrays.asList(
             ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME,
+            ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE,
             CONNECTION_FACTORY_TYPE
     ));
     private static final Set<String> FORWARDED_KEY_PREFIXES = new HashSet<>(Arrays.asList(
@@ -63,7 +64,7 @@ public class ConnectionFactoryRegistration implements Closeable {
     ));
     // additionally all keys prefixed with "jms." will be forwarded (with the prefix stripped).
     private static final String CONFIG_KEY_PREFIX = "jms.";
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(ConnectionFactoryRegistration.class);
 
     private AutoCloseable connectionFactory;
@@ -76,7 +77,7 @@ public class ConnectionFactoryRegistration implements Closeable {
         }
         try {
             LOG.info("Found ConnectionFactoryFactory. Creating ConnectionFactory {}", cfName);
-            String typeName = (String)config.get(CONNECTION_FACTORY_TYPE);
+            String typeName = (String) config.get(CONNECTION_FACTORY_TYPE);
             Class<?> type = getType(typeName);
             Object cf = createCF(cff, type, decryptedConfig);
             if (cf instanceof AutoCloseable) {
@@ -161,7 +162,7 @@ public class ConnectionFactoryRegistration implements Closeable {
         final Dictionary filtered = new Hashtable(dict.size());
         final Enumeration keys = dict.keys();
         while (keys.hasMoreElements()) {
-            final String key = (String)keys.nextElement();
+            final String key = (String) keys.nextElement();
             if (!isHidden(key)) {
                 filtered.put(key, dict.get(key));
             }

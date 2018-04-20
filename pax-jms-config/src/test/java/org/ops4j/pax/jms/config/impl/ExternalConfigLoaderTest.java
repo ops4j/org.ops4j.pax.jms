@@ -36,7 +36,7 @@ public class ExternalConfigLoaderTest {
     @Test
     public void testNoExternalConfig() {
         final Map<String, Object> expectedProps = new Hashtable<>();
-        expectedProps.put("connectionFactoryName", "testCF");
+        expectedProps.put("name", "testCF");
         expectedProps.put("timeout", 2000);
         
         Dictionary<String, Object> cfProps = new Hashtable<String, Object>(expectedProps);
@@ -57,14 +57,14 @@ public class ExternalConfigLoaderTest {
         final String myExternalPassword = createExternalSecret("password");
 
         Dictionary<String, Object> cfProps = new Hashtable<>();
-        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("name", "testCF");
         cfProps.put("password", "FILE(" + myExternalPassword + ")");
         cfProps.put("timeout", 2000);
 
         final ExternalConfigLoader externalConfigLoader = new ExternalConfigLoader();
         Dictionary<String, Object> loaded = externalConfigLoader.resolve(cfProps);
 
-        assertEquals("testCF", loaded.get("connectionFactoryName"));
+        assertEquals("testCF", loaded.get("name"));
         assertEquals("password", loaded.get("password"));
         assertEquals(2000, loaded.get("timeout"));
     }

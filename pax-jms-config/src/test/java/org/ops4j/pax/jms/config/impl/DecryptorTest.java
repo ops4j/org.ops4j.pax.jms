@@ -42,7 +42,7 @@ public class DecryptorTest {
     @Test
     public void testDecryptWithNoEncryptedProperties() {
         Dictionary cfProps = new Hashtable<>();
-        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("name", "testCF");
         cfProps.put("timeout", 2000);
 
         Decryptor decryptor = new Decryptor(getEncryptor());
@@ -66,14 +66,14 @@ public class DecryptorTest {
         String encryptedPassword = testStringEnryptor.encrypt(myPassword);
 
         Dictionary cfProps = new Hashtable<>();
-        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("name", "testCF");
         cfProps.put("password", "ENC(" + encryptedPassword + ")");
         cfProps.put("timeout", 2000);
 
         Decryptor decryptor = new Decryptor(testStringEnryptor);
         Dictionary decryptedConfig = decryptor.decrypt(cfProps);
 
-        assertEquals("testCF", decryptedConfig.get("connectionFactoryName"));
+        assertEquals("testCF", decryptedConfig.get("name"));
         assertEquals("password", decryptedConfig.get("password"));
         assertEquals("2000", decryptedConfig.get("timeout"));
     }
@@ -86,14 +86,14 @@ public class DecryptorTest {
         String encryptedPassword = testStringEnryptor.encrypt(myPassword);
 
         Dictionary cfProps = new Hashtable<>();
-        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("name", "testCF");
         cfProps.put("password", "ENC(" + encryptedPassword + ", " + alias + ")");
         cfProps.put("timeout", 2000);
 
         Decryptor decryptor = new Decryptor(testStringEnryptor);
         Dictionary decryptedConfig = decryptor.decrypt(cfProps);
 
-        assertEquals("testCF", decryptedConfig.get("connectionFactoryName"));
+        assertEquals("testCF", decryptedConfig.get("name"));
         assertEquals("password", decryptedConfig.get("password"));
         assertEquals("2000", decryptedConfig.get("timeout"));
     }
@@ -101,7 +101,7 @@ public class DecryptorTest {
     @Test
     public void testDecryptWithEncryptedPropertiesAndUnknownAlias() {
         Dictionary cfProps = new Hashtable<>();
-        cfProps.put("connectionFactoryName", "testCF");
+        cfProps.put("name", "testCF");
         cfProps.put("password", "ENC(something,testAlias)");
         cfProps.put("timeout", 2000);
         Assert.assertEquals("testAlias", Decryptor.getAlias(cfProps));

@@ -29,6 +29,7 @@ import org.ops4j.pax.transx.jms.ManagedConnectionFactoryBuilder;
 import org.ops4j.pax.transx.tm.TransactionManager;
 
 import static org.ops4j.pax.jms.service.internal.BeanConfig.getNonPoolProps;
+import static org.ops4j.pax.jms.service.internal.BeanConfig.getPoolProps;
 
 public class TransxXAPooledConnectionFactoryFactory extends TransxPooledConnectionFactoryFactory {
 
@@ -41,12 +42,13 @@ public class TransxXAPooledConnectionFactoryFactory extends TransxPooledConnecti
     @Override
     public ConnectionFactory create(ConnectionFactoryFactory cff, Map<String, Object> props) throws JMSRuntimeException {
         try {
+            ConnectionFactory cf = cff.createConnectionFactory(getNonPoolProps(props));
             XAConnectionFactory xacf = cff.createXAConnectionFactory(getNonPoolProps(props));
             ConnectionFactory mcf = ManagedConnectionFactoryBuilder.builder()
-                    // TODO: cf must not be null - maybe a change in pax-transx
-                    .connectionFactory(null, xacf)
-                    .transactionManager(transactionManager)
+                    .connectionFactory(cf, xacf)
                     .transaction(TransactionSupport.TransactionSupportLevel.XATransaction)
+                    .transactionManager(transactionManager)
+                    .properties(getPoolProps(props))
                     .build();
             // TODO: configure more
             return mcf;

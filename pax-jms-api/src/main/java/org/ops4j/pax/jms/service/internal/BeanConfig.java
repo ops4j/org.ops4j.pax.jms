@@ -46,8 +46,11 @@ public class BeanConfig {
         for (Method method : bean.getClass().getMethods()) {
             String name = method.getName();
             if (name.startsWith("set") && method.getParameterTypes().length == 1) {
-                String key = name.substring(3, 4).toLowerCase() + name.substring(4);
-                setters.put(key, method);
+                // special case for e.g., CCSID property
+                String key1 = name.substring(3, 4).toLowerCase() + name.substring(4);
+                String key2 = name.substring(3, 4) + name.substring(4);
+                setters.put(key1, method);
+                setters.put(key2, method);
             }
         }
         return setters;
