@@ -24,7 +24,7 @@ import javax.jms.XAConnectionFactory;
 import java.util.Map;
 
 /**
- * A factory for JMS {@link ConnectionFactory) and {@link XAConnectionFactory}. It's an equivalent of standard OSGi JDBC
+ * A factory for JMS {@link ConnectionFactory} and {@link XAConnectionFactory}. It's an equivalent of standard OSGi JDBC
  * {@code org.osgi.service.jdbc.DataSourceFactory}
  */
 public interface ConnectionFactoryFactory {
