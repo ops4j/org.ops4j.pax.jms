@@ -40,7 +40,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings({
-    "rawtypes", "unchecked"
+        "rawtypes", "unchecked"
 })
 public class ConnectionFactoryRegistration implements Closeable {
 
@@ -152,7 +152,7 @@ public class ConnectionFactoryRegistration implements Closeable {
         // exception: the CONNECTION_FACTORY_TYPE key (as legacy).
         boolean shouldForward = (!key.contains(".") && !NOT_FORWARDED_KEYS.contains(key));
         for (Iterator<String> it = FORWARDED_KEY_PREFIXES.iterator();
-                !shouldForward && it.hasNext(); ) {
+             !shouldForward && it.hasNext(); ) {
             shouldForward = key.startsWith(it.next());
         }
         return shouldForward;

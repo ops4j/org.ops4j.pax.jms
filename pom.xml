@@ -59,18 +59,22 @@
 
         <javax.jms.version>2.0.1</javax.jms.version>
         <geronimo.specs.jta.version>1.1.1</geronimo.specs.jta.version>
+        <geronimo.specs.jms11.version>1.1.1</geronimo.specs.jms11.version>
+        <geronimo.specs.management.version>1.0.1</geronimo.specs.management.version>
 
         <activemq.version>5.15.3</activemq.version>
         <artemis.version>2.5.0</artemis.version>
         <qpid.client.version>0.31.0</qpid.client.version>
+        <qpid.proton.version>0.26.0</qpid.proton.version>
         <osgi.core.version>6.0.0</osgi.core.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
-        <commons.pool2.version>2.4.2</commons.pool2.version>
+        <commons.pool2.version>2.5.0</commons.pool2.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
         <jasypt.version>1.9.2_1</jasypt.version>
         <jboss.narayana.version>5.6.3.Final</jboss.narayana.version>
         <jboss.transaction.version>7.5.1.Final</jboss.transaction.version>
         <junit.version>4.12</junit.version>
+        <karaf.version>4.1.1</karaf.version>
         <easymock.version>3.4</easymock.version>
         <logback.version>1.0.9</logback.version>
         <ops4j.base.version>1.5.0</ops4j.base.version>
@@ -99,7 +103,7 @@
         <module>pax-jms-pool-pooledjms</module>
         <module>pax-jms-pool-narayana</module>
         <module>pax-jms-pool-transx</module>
-        <!--<module>pax-jms-features</module>-->
+        <module>pax-jms-features</module>
     </modules>
 
     <dependencyManagement>
@@ -146,6 +150,11 @@
                 <artifactId>geronimo-jta_1.1_spec</artifactId>
                 <version>${geronimo.specs.jta.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${geronimo.specs.jms11.version}</version>
+            </dependency>
 
             <!-- Logging -->
 
@@ -175,17 +184,35 @@
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
                 <version>${activemq.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jms_1.1_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>artemis-jms-client</artifactId>
                 <version>${artemis.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jms_2.0_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.qpid</groupId>
                 <artifactId>qpid-jms-client</artifactId>
                 <version>${qpid.client.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jms_2.0_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- Other -->
@@ -200,6 +227,12 @@
                 <groupId>org.messaginghub</groupId>
                 <artifactId>pooled-jms</artifactId>
                 <version>${pooledjms.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jms_2.0_spec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

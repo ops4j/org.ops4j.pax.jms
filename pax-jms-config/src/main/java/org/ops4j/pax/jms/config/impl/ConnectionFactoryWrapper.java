@@ -61,7 +61,14 @@ public class ConnectionFactoryWrapper {
         LOG.info("Got service reference {}", connectionFactory);
         this.cf = connectionFactory;
 
-        boolean xa = connectionFactory instanceof XAConnectionFactory;
+        // better check!
+        boolean xa = false;
+        Object objectClass = reference.getProperty("objectClass");
+        if (objectClass instanceof String) {
+            xa = XAConnectionFactory.class.getName().equals(objectClass);
+        } else if (objectClass instanceof String[]) {
+            xa = Arrays.stream((String[]) objectClass).anyMatch(c -> XAConnectionFactory.class.getName().equals(c));
+        }
         ConnectionFactoryFactory providedCFFactory = xa ? new ProvidedConnectionFactoryFactory((XAConnectionFactory) connectionFactory)
                 : new ProvidedConnectionFactoryFactory((ConnectionFactory) connectionFactory);
 

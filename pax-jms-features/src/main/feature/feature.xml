@@ -1,49 +1,97 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-    Copyright 2017 OPS4J
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
 
-        http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
 -->
-<features name="pax-jms-${project.version}"
-        xmlns="http://karaf.apache.org/xmlns/features/v1.3.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-            http://karaf.apache.org/xmlns/features/v1.3.0
-            http://karaf.apache.org/xmlns/features/v1.3.0">
+<features name="pax-jms-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
 
     <repository>
         mvn:org.ops4j.pax.transx/pax-transx-features/${pax.transx.version}/xml/features
     </repository>
 
-    <feature name="pax-jms-pool" version="${project.version}">
-        <feature>pax-transx-jms</feature>
+    <feature name="pax-jms-config" version="${project.version}">
+        <details>Configuration Admin based registration of ConnectionFactory factories</details>
+
+        <bundle dependency="true">mvn:javax.jms/javax.jms-api/${javax.jms.version}</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/${geronimo.specs.jta.version}</bundle>
         <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jasypt/${jasypt.version}</bundle>
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-api/${project.version}</bundle>
-        <bundle>mvn:org.ops4j.pax.jms/pax-jms-pool/${project.version}</bundle>
-        <conditional>
-            <condition>req:type=karaf.feature;filter:="(|(osgi.identity=artemis-jms-client)(osgi.identity=artemis-amqp-client)(osgi.identity=artemis-core))"</condition>
-            <bundle>mvn:org.ops4j.pax.jms/pax-jms-artemis/${project.version}</bundle>
-        </conditional>
-        <conditional>
-            <condition>activemq-client</condition>
-            <condition>aries-blueprint</condition>
-            <bundle>mvn:org.ops4j.pax.jms/pax-jms-activemq/${project.version}</bundle>
-        </conditional>
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-config/${project.version}</bundle>
+    </feature>
+
+    <feature name="pax-jms-activemq" version="${project.version}">
+        <feature>pax-jms-config</feature>
+
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-j2ee-management_1.1_spec/${geronimo.specs.management.version}</bundle>
+        <bundle dependency="true">mvn:org.fusesource.hawtbuf/hawtbuf/${hawtbuf.version}</bundle>
+        <bundle dependency="true">mvn:org.apache.activemq/activemq-osgi/${activemq.version}</bundle>
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-activemq/${project.version}</bundle>
+    </feature>
+
+    <feature name="pax-jms-artemis" version="${project.version}">
+        <feature>pax-jms-config</feature>
+        <!-- features from mvn:org.apache.activemq/artemis-features/${artemis.version}/xml/features -->
+        <feature>artemis-core-client</feature>
+        <feature>artemis-jms-client</feature>
+        <feature>artemis-amqp-client</feature>
+
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-artemis/${project.version}</bundle>
     </feature>
 
     <feature name="pax-jms-ibmmq" version="${project.version}">
-        <feature>pax-jms-pool</feature>
+        <details>Support for IBM MQ - requires IBM MQ drivers from https://developer.ibm.com/messaging/mq-downloads</details>
+        <feature>pax-jms-config</feature>
 
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-ibmmq/${project.version}</bundle>
     </feature>
+
+    <feature name="pax-jms-pool-pooledjms" version="${project.version}">
+        <details>JMS connection/session pooling using org.messaginghub:pooled-jms library</details>
+        <feature>pax-jms-config</feature>
+
+        <bundle dependency="true">mvn:org.apache.commons/commons-pool2/${commons.pool2.version}</bundle>
+        <bundle dependency="true">mvn:org.messaginghub/pooled-jms/${pooledjms.version}</bundle>
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-pool-pooledjms/${project.version}</bundle>
+    </feature>
+
+    <feature name="pax-jms-pool-narayana" version="${project.version}">
+        <details>JMS connection/session pooling using org.messaginghub:pooled-jms library and Narayana TX Manager Recovery service</details>
+        <feature>pax-jms-config</feature>
+
+        <bundle dependency="true">mvn:org.jboss.narayana.osgi/narayana-osgi-jta/${jboss.narayana.version}</bundle>
+        <bundle dependency="true">mvn:org.apache.commons/commons-pool2/${commons.pool2.version}</bundle>
+        <bundle dependency="true">mvn:org.messaginghub/pooled-jms/${pooledjms.version}</bundle>
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-pool-narayana/${project.version}</bundle>
+    </feature>
+
+    <feature name="pax-jms-pool-transx" version="${project.version}">
+        <details>JMS connection/session pooling JCA based pax-transx-jms</details>
+        <feature>pax-jms-config</feature>
+        <feature>pax-transx-jms</feature>
+        <feature>pax-transx-tm</feature>
+
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-pool-transx/${project.version}</bundle>
+    </feature>
+
+    <feature name="pax-jms-pool" version="${project.version}">
+        <details>Default JMS pool using org.messaginghub:pooled-jms library</details>
+        <feature>pax-jms-pool-pooledjms</feature>
+    </feature>
+
 </features>
