@@ -24,11 +24,15 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configure a java bean from a given Map of properties.
  */
 public class BeanConfig {
+
+    public static final Logger LOG = LoggerFactory.getLogger(BeanConfig.class);
 
     protected static final String POOL_PREFIX = "pool.";
     protected static final String FACTORY_PREFIX = "factory.";
@@ -91,8 +95,8 @@ public class BeanConfig {
         try {
             Method method = setters.get(key);
             if (method == null) {
-                throw new IllegalArgumentException("No setter in " + bean.getClass()
-                    + " for property " + key);
+                LOG.warn("No setter in " + bean.getClass() + " for property " + key);
+                return;
             }
             Class<?> paramClass = method.getParameterTypes()[0];
             if (paramClass == int.class || paramClass == Integer.class) {
