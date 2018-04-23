@@ -25,18 +25,24 @@
         mvn:org.ops4j.pax.transx/pax-transx-features/${pax.transx.version}/xml/features
     </repository>
 
-    <feature name="pax-jms-config" version="${project.version}">
-        <details>Configuration Admin based registration of ConnectionFactory factories</details>
+    <feature name="pax-jms-core" version="${project.version}">
+        <details>Core dependencies for pax-jms features</details>
 
         <bundle dependency="true">mvn:javax.jms/javax.jms-api/${javax.jms.version}</bundle>
         <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/${geronimo.specs.jta.version}</bundle>
         <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jasypt/${jasypt.version}</bundle>
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-api/${project.version}</bundle>
+    </feature>
+
+    <feature name="pax-jms-config" version="${project.version}">
+        <details>Configuration Admin based registration of ConnectionFactory factories</details>
+        <feature>pax-jms-core</feature>
+
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-config/${project.version}</bundle>
     </feature>
 
     <feature name="pax-jms-activemq" version="${project.version}">
-        <feature>pax-jms-config</feature>
+        <feature>pax-jms-core</feature>
 
         <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-j2ee-management_1.1_spec/${geronimo.specs.management.version}</bundle>
         <bundle dependency="true">mvn:org.fusesource.hawtbuf/hawtbuf/${hawtbuf.version}</bundle>
@@ -45,7 +51,7 @@
     </feature>
 
     <feature name="pax-jms-artemis" version="${project.version}">
-        <feature>pax-jms-config</feature>
+        <feature>pax-jms-core</feature>
         <!-- features from mvn:org.apache.activemq/artemis-features/${artemis.version}/xml/features -->
         <feature>artemis-core-client</feature>
         <feature>artemis-jms-client</feature>
@@ -56,14 +62,14 @@
 
     <feature name="pax-jms-ibmmq" version="${project.version}">
         <details>Support for IBM MQ - requires IBM MQ drivers from https://developer.ibm.com/messaging/mq-downloads</details>
-        <feature>pax-jms-config</feature>
+        <feature>pax-jms-core</feature>
 
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-ibmmq/${project.version}</bundle>
     </feature>
 
     <feature name="pax-jms-pool-pooledjms" version="${project.version}">
         <details>JMS connection/session pooling using org.messaginghub:pooled-jms library</details>
-        <feature>pax-jms-config</feature>
+        <feature>pax-jms-core</feature>
 
         <bundle dependency="true">mvn:org.apache.commons/commons-pool2/${commons.pool2.version}</bundle>
         <bundle dependency="true">mvn:org.messaginghub/pooled-jms/${pooledjms.version}</bundle>
@@ -72,7 +78,7 @@
 
     <feature name="pax-jms-pool-narayana" version="${project.version}">
         <details>JMS connection/session pooling using org.messaginghub:pooled-jms library and Narayana TX Manager Recovery service</details>
-        <feature>pax-jms-config</feature>
+        <feature>pax-jms-core</feature>
 
         <bundle dependency="true">mvn:org.jboss.narayana.osgi/narayana-osgi-jta/${jboss.narayana.version}</bundle>
         <bundle dependency="true">mvn:org.apache.commons/commons-pool2/${commons.pool2.version}</bundle>
@@ -82,7 +88,7 @@
 
     <feature name="pax-jms-pool-transx" version="${project.version}">
         <details>JMS connection/session pooling JCA based pax-transx-jms</details>
-        <feature>pax-jms-config</feature>
+        <feature>pax-jms-core</feature>
         <feature>pax-transx-jms</feature>
         <feature>pax-transx-tm</feature>
 
