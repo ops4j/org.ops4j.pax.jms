@@ -53,8 +53,8 @@
     <feature name="pax-jms-artemis" version="${project.version}">
         <feature>pax-jms-core</feature>
         <!-- features from mvn:org.apache.activemq/artemis-features/${artemis.version}/xml/features -->
-        <feature>artemis-core-client</feature>
-        <feature>artemis-jms-client</feature>
+        <feature dependency="true">artemis-core-client</feature>
+        <feature dependency="true">artemis-jms-client</feature>
         <feature>artemis-amqp-client</feature>
 
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-artemis/${project.version}</bundle>
