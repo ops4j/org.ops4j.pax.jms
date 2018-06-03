@@ -18,6 +18,7 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
+import org.ops4j.pax.jms.config.ConfigLoader;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -34,14 +35,18 @@ public class Activator implements BundleActivator {
 
     private ServiceTracker<?, ?> connectionFactoryTracker;
 
+    private ExternalConfigLoader externalConfigLoader;
+    private ServiceRegistration<ConfigLoader> configLoaderRegistration;
     private ConnectionFactoryConfigManager configManager;
     private ServiceRegistration<ManagedServiceFactory> registration;
 
     @Override
     public void start(BundleContext context) throws Exception {
+        configLoaderRegistration = context.registerService(ConfigLoader.class, new FileConfigLoader(), new Hashtable<>());
+        externalConfigLoader = new ExternalConfigLoader(context);
         Dictionary<String, String> props = new Hashtable<>();
         props.put(Constants.SERVICE_PID, FACTORY_PID);
-        configManager = new ConnectionFactoryConfigManager(context);
+        configManager = new ConnectionFactoryConfigManager(context, externalConfigLoader);
         // this service will track:
         //  - org.ops4j.connectionfactory factory PIDs
         //  - (optionally) org.jasypt.encryption.StringEncryptor services
@@ -60,7 +65,7 @@ public class Activator implements BundleActivator {
         String filter = "(&(pool=*)(!(pax.jms.managed=true))" +
                 "(|(objectClass=javax.jms.ConnectionFactory)(objectClass=javax.jms.XAConnectionFactory)))";
         connectionFactoryTracker = helper.track(Object.class, filter,
-                (cf, reference) -> new ConnectionFactoryWrapper(context, cf, reference),
+                (cf, reference) -> new ConnectionFactoryWrapper(context, externalConfigLoader, cf, reference),
                 ConnectionFactoryWrapper::close
         );
     }
@@ -72,6 +77,8 @@ public class Activator implements BundleActivator {
         }
         registration.unregister();
         configManager.destroy();
+        configLoaderRegistration.unregister();
+        externalConfigLoader.destroy();
     }
 
 }

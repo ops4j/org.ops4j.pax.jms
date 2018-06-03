@@ -32,8 +32,10 @@ import org.easymock.IMocksControl;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Before;
 import org.junit.Test;
+import org.ops4j.pax.jms.config.ConfigLoader;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceListener;
@@ -65,6 +67,12 @@ public class ConnectionFactoryConfigManagerTest {
         Capture<String> capture = newCapture();
         expect(context.createFilter(EasyMock.capture(capture)))
                 .andStubAnswer(() -> FrameworkUtil.createFilter(capture.getValue()));
+        context.addServiceListener(anyObject(ServiceListener.class), anyString());
+        ServiceReference ref = c.createMock(ServiceReference.class);
+        ServiceReference[] refs = new ServiceReference[]{ref};
+        String filter = "(" + Constants.OBJECTCLASS + "=" + ConfigLoader.class.getName() + ")";
+        expect(context.getServiceReferences((String) null, filter)).andReturn(refs);
+        expect(context.getService(ref)).andReturn(new FileConfigLoader());
     }
 
     @Test
@@ -78,10 +86,11 @@ public class ConnectionFactoryConfigManagerTest {
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "mycfname");
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "artemis");
 
-        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
-
         // Test config created
         c.replay();
+
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
+
         cfManager.updated(TESTPID, properties);
 
         c.verify();
@@ -111,10 +120,11 @@ public class ConnectionFactoryConfigManagerTest {
         StringEncryptor encryptor = expectTracked(c, context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
         expect(encryptor.decrypt("ciphertext")).andReturn("password");
 
-        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
-
         // Test config created
         c.replay();
+
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
+
         Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(ConnectionFactoryRegistration.JNDI_SERVICE_NAME, "test");
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "artemis");
@@ -134,12 +144,13 @@ public class ConnectionFactoryConfigManagerTest {
         final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
         ConnectionFactory cf = expectConnectionFactoryCreated(cff);
         expectRegistration(cf);
-        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
         StringEncryptor encryptor = expectTracked(c, context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
         expect(encryptor.decrypt("ciphertext")).andReturn("password");
 
         // Test config created
         c.replay();
+
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
 
         Dictionary<String, String> properties = new Hashtable<String, String>();
         properties.put(ConnectionFactoryRegistration.JNDI_SERVICE_NAME, "test");
@@ -212,10 +223,11 @@ public class ConnectionFactoryConfigManagerTest {
         ServiceRegistration sreg = c.createMock(ServiceRegistration.class);
         expect(context.registerService(anyString(), eq(cf), eq(expectedServiceProperties))).andReturn(sreg);
 
-        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context);
-
         // Test config created
         c.replay();
+
+        ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
+
         cfManager.updated(TESTPID, properties);
         c.verify();
     }
