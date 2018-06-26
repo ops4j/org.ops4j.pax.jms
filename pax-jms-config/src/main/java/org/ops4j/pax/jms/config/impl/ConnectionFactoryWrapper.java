@@ -54,10 +54,11 @@ public class ConnectionFactoryWrapper {
      * using properties that are part of original connection factory registration.
      *
      * @param context {@link BundleContext} of pax-jms-config
+     * @param externalConfigLoader loader for external configurations
      * @param connectionFactory application registered and broker-specific connection factory
      * @param reference broker-specific {@link ServiceReference} for {@link ConnectionFactory}/{@link XAConnectionFactory}.
      */
-    public ConnectionFactoryWrapper(BundleContext context, Object connectionFactory, ServiceReference<Object> reference) {
+    public ConnectionFactoryWrapper(BundleContext context, ExternalConfigLoader externalConfigLoader, Object connectionFactory, ServiceReference<Object> reference) {
         LOG.info("Got service reference {}", connectionFactory);
         this.cf = connectionFactory;
 
@@ -73,7 +74,7 @@ public class ConnectionFactoryWrapper {
                 : new ProvidedConnectionFactoryFactory((ConnectionFactory) connectionFactory);
 
         Dictionary<String, Object> config = serviceReferenceProperties(reference);
-        Dictionary<String, Object> loadedConfig = new ExternalConfigLoader().resolve(config);
+        Dictionary<String, Object> loadedConfig = externalConfigLoader.resolve(config);
         loadedConfig.put("xa", Boolean.toString(xa));
         loadedConfig.put(Constants.SERVICE_RANKING, getInt(config, Constants.SERVICE_RANKING, 0) + 1000);
         // reference to service being wrapped
