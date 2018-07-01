@@ -18,8 +18,8 @@
  */
 package org.ops4j.pax.jms.activemq;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.ActiveMQXAConnectionFactory;
+import org.apache.activemq.ActiveMQSslConnectionFactory;
+import org.apache.activemq.ActiveMQXASslConnectionFactory;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 
 import javax.jms.Connection;
@@ -43,7 +43,7 @@ public class ActiveMQConnectionFactoryFactory implements ConnectionFactoryFactor
         if (url == null) {
             throw new JMSRuntimeException("The url property must be set");
         }
-        ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory(url);
+        ActiveMQSslConnectionFactory cf = new ActiveMQSslConnectionFactory(url);
         cf.buildFromMap(props);
         // adapt ActiveMQ connection factory to JMS 2.0
         return new ConnectionFactory() {
@@ -87,7 +87,7 @@ public class ActiveMQConnectionFactoryFactory implements ConnectionFactoryFactor
         if (url == null) {
             throw new JMSRuntimeException("The url property must be set");
         }
-        ActiveMQXAConnectionFactory xaCf = new ActiveMQXAConnectionFactory(url);
+        ActiveMQXASslConnectionFactory xaCf = new ActiveMQXASslConnectionFactory(url);
         xaCf.buildFromMap(props);
         // adapt ActiveMQ connection factory to JMS 2.0
         return new XAConnectionFactory() {
