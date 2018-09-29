@@ -29,9 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Watches for ConnectionFactory configs in OSGi configuration admin and creates / destroys the trackers
@@ -53,7 +53,7 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     public ConnectionFactoryConfigManager(BundleContext context, ExternalConfigLoader externalConfigLoader) {
         this.context = context;
         this.externalConfigLoader = externalConfigLoader;
-        this.trackers = new HashMap<>();
+        this.trackers = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     }
 
     @Override
-    public synchronized void updated(final String pid, final Dictionary config) throws ConfigurationException {
+    public void updated(final String pid, final Dictionary config) throws ConfigurationException {
         deleted(pid);
         if (config == null) {
             return;
@@ -169,14 +169,14 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     }
 
     @Override
-    public synchronized void deleted(String pid) {
+    public void deleted(String pid) {
         ServiceTracker<?, ?> tracker = trackers.remove(pid);
         if (tracker != null) {
             tracker.close();
         }
     }
 
-    synchronized void destroy() {
+    void destroy() {
         for (String pid : trackers.keySet()) {
             deleted(pid);
         }
