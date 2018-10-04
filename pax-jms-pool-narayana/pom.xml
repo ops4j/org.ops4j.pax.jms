@@ -34,7 +34,7 @@
     <artifactId>pax-jms-pool-narayana</artifactId>
     <packaging>bundle</packaging>
 
-    <name>OPS4J Pax JMS MessagingHub JMS Pool implementation</name>
+    <name>OPS4J Pax JMS Narayana / MessagingHub JMS Pool implementation</name>
 
     <description>org.messaginghub:pooled-jms based JMS pool with XA Recovery for Narayana Transaction Manager</description>
 
