@@ -67,6 +67,13 @@
         <bundle>mvn:org.ops4j.pax.jms/pax-jms-ibmmq/${project.version}</bundle>
     </feature>
 
+    <feature name="pax-jms-oracleaq" version="${project.version}">
+        <details>Support for Oracle AQ - requires Oracle AQ and database drivers</details>
+        <feature>pax-jms-core</feature>
+		
+        <bundle>mvn:org.ops4j.pax.jms/pax-jms-oracleaq/${project.version}</bundle>
+    </feature>
+	
     <feature name="pax-jms-pool-pooledjms" version="${project.version}">
         <details>JMS connection/session pooling using org.messaginghub:pooled-jms library</details>
         <feature>pax-jms-core</feature>
