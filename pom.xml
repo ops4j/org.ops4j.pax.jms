@@ -100,7 +100,7 @@
         <module>pax-jms-activemq</module>
         <module>pax-jms-artemis</module>
         <module>pax-jms-ibmmq</module>
-		<module>pax-jms-oracleaq</module>
+        <module>pax-jms-oracleaq</module>
         <module>pax-jms-pool-pooledjms</module>
         <module>pax-jms-pool-narayana</module>
         <module>pax-jms-pool-transx</module>
