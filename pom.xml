@@ -68,7 +68,7 @@
         <qpid.proton.version>0.26.0</qpid.proton.version>
         <osgi.core.version>6.0.0</osgi.core.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
-        <commons.pool2.version>2.5.0</commons.pool2.version>
+        <commons.pool2.version>2.6.2</commons.pool2.version>
         <hawtbuf.version>1.11</hawtbuf.version>
         <jasypt.version>1.9.2_1</jasypt.version>
         <jboss.narayana.version>5.8.2.Final</jboss.narayana.version>
@@ -81,8 +81,8 @@
         <pax.exam.version>4.10.0</pax.exam.version>
         <pax.swissbox.version>1.8.2</pax.swissbox.version>
         <pax.url.version>2.6.1</pax.url.version>
-        <pax.transx.version>0.4.2</pax.transx.version>
-        <pooledjms.version>0.4.0</pooledjms.version>
+        <pax.transx.version>0.4.3</pax.transx.version>
+        <pooledjms.version>1.0.5</pooledjms.version>
         <slf4j.version>1.6.4</slf4j.version>
     </properties>
 
