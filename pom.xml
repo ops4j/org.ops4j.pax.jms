@@ -70,7 +70,7 @@
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <commons.pool2.version>2.6.2</commons.pool2.version>
         <hawtbuf.version>1.11</hawtbuf.version>
-        <jasypt.version>1.9.2_1</jasypt.version>
+        <jasypt.version>1.9.3_1</jasypt.version>
         <jboss.narayana.version>5.8.2.Final</jboss.narayana.version>
         <jboss.transaction.version>7.6.0.Final</jboss.transaction.version>
         <junit.version>4.12</junit.version>
