@@ -119,6 +119,21 @@ public class ExternalConfigLoaderTest {
         assertEquals(2000, loaded.get("timeout"));
     }
 
+    @Test
+    public void testCrazyExternalConfig() {
+        Dictionary<String, Object> cfProps = new Hashtable<>();
+        cfProps.put("name", "testCF");
+        cfProps.put("connectionNameList", "host1(port1),host2(port2),host3(port3)");
+        cfProps.put("timeout", 2000);
+
+        final ExternalConfigLoader externalConfigLoader = new ExternalConfigLoader(context);
+        Dictionary<String, Object> loaded = externalConfigLoader.resolve(cfProps);
+
+        assertEquals("testCF", loaded.get("name"));
+        assertEquals("host1(port1),host2(port2),host3(port3)", loaded.get("connectionNameList"));
+        assertEquals(2000, loaded.get("timeout"));
+    }
+
     public static String createExternalSecret(final String value) {
         try {
             final File file = File.createTempFile("externalPaxJmsConfig-", ".secret");
