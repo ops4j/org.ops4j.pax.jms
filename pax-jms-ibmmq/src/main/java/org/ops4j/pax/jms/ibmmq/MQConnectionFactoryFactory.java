@@ -18,7 +18,9 @@
  */
 package org.ops4j.pax.jms.ibmmq;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSRuntimeException;
 import javax.jms.XAConnectionFactory;
@@ -44,6 +46,7 @@ public class MQConnectionFactoryFactory implements ConnectionFactoryFactory {
     public ConnectionFactory createConnectionFactory(Map<String, Object> props) throws JMSRuntimeException {
         try {
             ConnectionFactory cf = ConnectionFactory.class.cast(ibmMqConnectionFactoryClass.newInstance());
+            configureConnectionNameList(props);
             BeanConfig.configure(cf, props);
             ConnectionFactoryAdapter cfa = new ConnectionFactoryAdapter();
             cfa.setTargetConnectionFactory(cf);
@@ -93,4 +96,22 @@ public class MQConnectionFactoryFactory implements ConnectionFactoryFactory {
         }
     }
 
+    static void configureConnectionNameList(final Map<String, Object> props) {
+        // fixes #18 to support connectionNameList of the form host1:port1,host2:port2,..
+        // and convert to host1(port1),host2(port2)
+        final String original = (String) props.remove("connectionNameList");
+        if (original != null) {
+            final String modified = Arrays.stream(original.split(","))
+                    .map(hostPort -> {
+                        String[] parts = hostPort.split(":");
+                        String change = parts[0];
+                        if (parts.length > 1) {
+                            change = String.format("%s(%s)", parts[0], parts[1]);
+                        }
+                        return change;
+                    })
+                    .collect(Collectors.joining(","));
+            props.put("connectionNameList", modified);
+        }
+    }
 }
