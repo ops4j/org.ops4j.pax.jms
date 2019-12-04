@@ -62,8 +62,8 @@
         <geronimo.specs.jms11.version>1.1.1</geronimo.specs.jms11.version>
         <geronimo.specs.management.version>1.0.1</geronimo.specs.management.version>
 
-        <activemq.version>5.15.3</activemq.version>
-        <artemis.version>2.5.0</artemis.version>
+        <activemq.version>5.15.10</activemq.version>
+        <artemis.version>2.10.1</artemis.version>
         <qpid.client.version>0.31.0</qpid.client.version>
         <qpid.proton.version>0.26.0</qpid.proton.version>
         <osgi.core.version>6.0.0</osgi.core.version>
@@ -74,13 +74,13 @@
         <jboss.narayana.version>5.8.2.Final</jboss.narayana.version>
         <jboss.transaction.version>7.6.0.Final</jboss.transaction.version>
         <junit.version>4.12</junit.version>
-        <karaf.version>4.1.1</karaf.version>
+        <karaf.version>4.1.7</karaf.version>
         <easymock.version>3.4</easymock.version>
         <logback.version>1.0.9</logback.version>
         <ops4j.base.version>1.5.0</ops4j.base.version>
         <pax.exam.version>4.10.0</pax.exam.version>
         <pax.swissbox.version>1.8.2</pax.swissbox.version>
-        <pax.url.version>2.6.1</pax.url.version>
+        <pax.url.version>2.6.2</pax.url.version>
         <pax.transx.version>0.4.4</pax.transx.version>
         <pooledjms.version>1.0.5</pooledjms.version>
         <slf4j.version>1.6.4</slf4j.version>
