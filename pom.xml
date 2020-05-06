@@ -71,7 +71,7 @@
         <commons.pool2.version>2.8.0</commons.pool2.version>
         <hawtbuf.version>1.11</hawtbuf.version>
         <jasypt.version>1.9.3_1</jasypt.version>
-        <jboss.narayana.version>5.8.2.Final</jboss.narayana.version>
+        <jboss.narayana.version>5.9.8.Final</jboss.narayana.version>
         <jboss.transaction.version>7.6.0.Final</jboss.transaction.version>
         <junit.version>4.12</junit.version>
         <karaf.version>4.1.1</karaf.version>
