@@ -63,9 +63,9 @@
         <geronimo.specs.management.version>1.0.1</geronimo.specs.management.version>
 
         <activemq.version>5.15.3</activemq.version>
-        <artemis.version>2.5.0</artemis.version>
-        <qpid.client.version>0.31.0</qpid.client.version>
-        <qpid.proton.version>0.26.0</qpid.proton.version>
+        <artemis.version>2.11.0</artemis.version>
+        <qpid.client.version>0.51.0</qpid.client.version>
+        <qpid.proton.version>0.33.4</qpid.proton.version>
         <osgi.core.version>6.0.0</osgi.core.version>
         <osgi.compendium.version>5.0.0</osgi.compendium.version>
         <commons.pool2.version>2.8.0</commons.pool2.version>
