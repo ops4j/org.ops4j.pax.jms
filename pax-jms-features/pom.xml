@@ -26,13 +26,13 @@
     <parent>
         <groupId>org.ops4j.pax</groupId>
         <artifactId>jms</artifactId>
-        <version>1.0.8-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.ops4j.pax.jms</groupId>
     <artifactId>pax-jms-features</artifactId>
-    <packaging>feature</packaging>
+    <packaging>pom</packaging>
 
     <name>OPS4J Pax JMS Karaf Features</name>
 
@@ -46,87 +46,180 @@
         <dependency>
             <groupId>org.apache.karaf.features</groupId>
             <artifactId>framework</artifactId>
-            <version>${karaf.version}</version>
+            <version>${version.org.apache.karaf}</version>
             <type>kar</type>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>org.eclipse.tycho</groupId>
-                    <artifactId>org.eclipse.osgi</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.karaf.features</groupId>
             <artifactId>enterprise</artifactId>
-            <version>${karaf.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.karaf.features</groupId>
-            <artifactId>spring</artifactId>
-            <version>${karaf.version}</version>
-            <type>xml</type>
-            <classifier>features</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-karaf</artifactId>
-            <version>${activemq.version}</version>
+            <version>${version.org.apache.karaf}</version>
             <type>xml</type>
             <classifier>features</classifier>
             <exclusions>
                 <exclusion>
-                    <groupId>org.apache.karaf.shell</groupId>
-                    <artifactId>org.apache.karaf.shell.console</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.karaf.features</groupId>
+            <artifactId>spring</artifactId>
+            <version>${version.org.apache.karaf}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+            <exclusions>
                 <exclusion>
-                    <groupId>org.apache.geronimo.specs</groupId>
-                    <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-karaf</artifactId>
+            <version>${version.org.apache.activemq}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+            <exclusions>
                 <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-pool2</artifactId>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>artemis-features</artifactId>
-            <version>${artemis.version}</version>
+            <version>${version.org.apache.activemq.artemis}</version>
             <type>xml</type>
             <classifier>features</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
+
+            <!-- Core plugins -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>filter</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Tools -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Karaf plugins -->
+
             <plugin>
                 <groupId>org.apache.karaf.tooling</groupId>
                 <artifactId>karaf-maven-plugin</artifactId>
-                <version>${karaf.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <descriptors>
-                        <descriptor>file:${project.build.directory}/feature/feature.xml</descriptor>
-                        <!--<descriptor>mvn:org.apache.karaf.features/spring/${karaf.version}/xml/features</descriptor>-->
-                        <descriptor>mvn:org.apache.karaf.features/enterprise/${karaf.version}/xml/features</descriptor>
-                        <!--<descriptor>mvn:org.apache.activemq/activemq-karaf/${activemq.version}/xml/features</descriptor>-->
-                        <descriptor>mvn:org.apache.activemq/artemis-features/${artemis.version}/xml/features</descriptor>
-                    </descriptors>
-                    <framework>
-                        <feature>framework</feature>
-                    </framework>
-                    <features>
-                        <feature>pax-jms-config</feature>
-                        <feature>pax-jms-artemis</feature>
-                        <feature>pax-jms-pool-pooledjms</feature>
-                        <feature>pax-jms-pool-narayana</feature>
-                        <feature>pax-jms-pool-transx</feature>
-                    </features>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>verify</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>mvn:org.apache.karaf.features/spring/${version.org.apache.karaf}/xml/features</descriptor>
+                                <descriptor>mvn:org.apache.karaf.features/enterprise/${version.org.apache.karaf}/xml/features</descriptor>
+                                <descriptor>mvn:org.apache.activemq/activemq-karaf/${version.org.apache.activemq}/xml/features</descriptor>
+                                <descriptor>mvn:org.apache.activemq/artemis-features/${version.org.apache.activemq.artemis}/xml/features</descriptor>
+                                <descriptor>file:${project.build.directory}/classes/feature.xml</descriptor>
+                            </descriptors>
+                            <javase>1.8</javase>
+                            <framework>
+                                <feature>framework</feature>
+                            </framework>
+                            <features>
+                                <feature>pax-jms-config</feature>
+                                <feature>pax-jms-activemq</feature>
+                                <feature>pax-jms-artemis</feature>
+                                <feature>pax-jms-pool-pooledjms</feature>
+                                <feature>pax-jms-pool-narayana</feature>
+                                <feature>pax-jms-pool-transx</feature>
+                            </features>
+                            <verifyTransitive>false</verifyTransitive>
+                            <ignoreMissingConditions>true</ignoreMissingConditions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
+
+            <!-- MojoHaus plugins -->
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/classes/features.xml</file>
+                                    <type>xml</type>
+                                    <classifier>features</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>target/classes/features-gpl.xml</file>
+                                    <type>xml</type>
+                                    <classifier>features-gpl</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

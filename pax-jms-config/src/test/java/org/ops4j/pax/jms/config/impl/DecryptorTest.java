@@ -18,10 +18,6 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -30,6 +26,10 @@ import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author kameshs
@@ -55,8 +55,6 @@ public class DecryptorTest {
             assertEquals(expectedValue, actualValue);
         }
     }
-
-
 
     @Test
     public void testDecryptWithEncryptedProperties() {

@@ -2,3 +2,5 @@ target
 .idea
 *.iml
 activemq-data/
+pax-jms-artemis/data/
+

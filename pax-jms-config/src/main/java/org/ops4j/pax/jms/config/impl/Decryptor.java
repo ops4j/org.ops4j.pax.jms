@@ -18,11 +18,11 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
-import org.jasypt.encryption.StringEncryptor;
-
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import org.jasypt.encryption.StringEncryptor;
 
 /**
  * Decryptor for cipher texts.

@@ -18,17 +18,18 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
-
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class to track multiple services in cascade.
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
  */
 public class ServiceTrackerHelper {
 
-    private static final Logger LOGGER = Logger.getLogger(ServiceTrackerHelper.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceTrackerHelper.class.getName());
 
     private final BundleContext context;
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,20 +19,15 @@
     under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
 
-    <modelVersion>4.0.0</modelVersion>
+    <suppress checks=".*" files=".+[\\\/]generated[\\\/].+\.java" />
+    <suppress checks=".*" files=".+[\\\/]build[\\\/]src[\\\/].+\.java" />
+    <suppress checks=".*" files=".+[\\\/]target[\\\/].+\.java" />
+    <suppress checks=".*" files=".+[\\\/]target[\\\/].+\.properties" />
+    <suppress checks=".*" files=".+[\\\/]contrib[\\\/].+\.java" />
 
-    <parent>
-        <groupId>org.ops4j.pax</groupId>
-        <artifactId>jms</artifactId>
-        <version>1.0.8-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-
-    <groupId>org.ops4j.pax.jms</groupId>
-    <artifactId>pax-jms-checkstyle-rules</artifactId>
-
-    <name>OPS4J Pax JMS Checkstyle Rules</name>
-
-</project>
+</suppressions>

@@ -18,6 +18,11 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import org.jasypt.encryption.StringEncryptor;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 import org.ops4j.pax.jms.service.PooledConnectionFactoryFactory;
@@ -27,11 +32,6 @@ import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Watches for ConnectionFactory configs in OSGi configuration admin and creates / destroys the trackers

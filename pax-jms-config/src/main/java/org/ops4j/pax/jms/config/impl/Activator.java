@@ -18,6 +18,9 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.ops4j.pax.jms.config.ConfigLoader;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -25,9 +28,6 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.util.tracker.ServiceTracker;
-
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 public class Activator implements BundleActivator {
 

@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.ops4j.pax</groupId>
         <artifactId>jms</artifactId>
-        <version>1.0.8-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -37,11 +37,42 @@
     <name>OPS4J Pax JMS Artemis Support</name>
 
     <dependencies>
+
+        <!-- pax-jms own artifacts -->
+
         <dependency>
             <groupId>org.ops4j.pax.jms</groupId>
             <artifactId>pax-jms-api</artifactId>
         </dependency>
 
+        <!-- Test -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Logging dependencies -->
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Broker drivers -->
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-junit</artifactId>
+            <version>${version.org.apache.activemq.artemis}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>artemis-jms-client</artifactId>
@@ -52,6 +83,7 @@
             <artifactId>qpid-jms-client</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <build>

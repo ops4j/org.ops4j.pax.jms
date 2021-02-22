@@ -27,8 +27,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.easymock.Capture;
-import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 import org.ops4j.pax.jms.config.ConfigLoader;
@@ -38,34 +36,27 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.createControl;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.newCapture;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ExternalConfigLoaderTest {
 
-    private IMocksControl c;
     private BundleContext context;
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setup() throws Exception {
-        c = createControl();
-        context = c.createMock(BundleContext.class);
-        Capture<String> capture = newCapture();
-        expect(context.createFilter(capture(capture))).andStubAnswer(() -> FrameworkUtil.createFilter(capture.getValue()));
-        context.addServiceListener(anyObject(ServiceListener.class), anyString());
-        ServiceReference ref1 = c.createMock(ServiceReference.class);
-        ServiceReference ref2 = c.createMock(ServiceReference.class);
-        ServiceReference[] refs = new ServiceReference[]{ref1, ref2};
+        context = mock(BundleContext.class);
+        when(context.createFilter(anyString())).thenAnswer(invocation -> FrameworkUtil.createFilter(invocation.getArgument(0, String.class)));
+        ServiceReference<FileConfigLoader> ref1 = mock(ServiceReference.class);
+        ServiceReference<CustomConfigLoader> ref2 = mock(ServiceReference.class);
+        ServiceReference<?>[] refs = new ServiceReference<?>[] { ref1, ref2 };
         String filter = "(" + Constants.OBJECTCLASS + "=" + ConfigLoader.class.getName() + ")";
-        expect(context.getServiceReferences((String) null, filter)).andReturn(refs);
-        expect(context.getService(ref1)).andReturn(new FileConfigLoader());
-        expect(context.getService(ref2)).andReturn(new CustomConfigLoader());
-        c.replay();
+        when(context.getServiceReferences((String) null, filter)).thenReturn(refs);
+        when(context.getService(ref1)).thenReturn(new FileConfigLoader());
+        when(context.getService(ref2)).thenReturn(new CustomConfigLoader());
     }
 
     @Test
@@ -79,7 +70,7 @@ public class ExternalConfigLoaderTest {
         final ExternalConfigLoader externalConfigLoader = new ExternalConfigLoader(context);
         externalConfigLoader.resolve(cfProps);
 
-        for (Enumeration<String> e = cfProps.keys(); e.hasMoreElements();) {
+        for (Enumeration<String> e = cfProps.keys(); e.hasMoreElements(); ) {
             String key = e.nextElement();
             String expectedValue = String.valueOf(expectedProps.get(key));
             String actualValue = String.valueOf(cfProps.get(key));
@@ -161,4 +152,5 @@ public class ExternalConfigLoaderTest {
             return key;
         }
     }
+
 }

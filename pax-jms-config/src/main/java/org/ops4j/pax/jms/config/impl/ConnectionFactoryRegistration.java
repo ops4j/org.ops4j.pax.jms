@@ -18,15 +18,6 @@
  */
 package org.ops4j.pax.jms.config.impl;
 
-import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSRuntimeException;
-import javax.jms.XAConnectionFactory;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.Dictionary;
@@ -38,6 +29,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSRuntimeException;
+import javax.jms.XAConnectionFactory;
+
+import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({
         "rawtypes", "unchecked"

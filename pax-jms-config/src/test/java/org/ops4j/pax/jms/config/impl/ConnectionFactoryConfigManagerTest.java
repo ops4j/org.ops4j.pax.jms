@@ -23,15 +23,12 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.jms.ConnectionFactory;
 
-import org.easymock.Capture;
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.ops4j.pax.jms.config.ConfigLoader;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 import org.osgi.framework.BundleContext;
@@ -42,13 +39,13 @@ import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.newCapture;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings({
         "rawtypes", "unchecked"
@@ -57,27 +54,23 @@ public class ConnectionFactoryConfigManagerTest {
 
     private static final String ARTEMIS_CFF_FILTER = "(&(objectClass=org.ops4j.pax.jms.service.ConnectionFactoryFactory)(type=artemis))";
     private static final String TESTPID = "testpid";
-    private IMocksControl c;
     private BundleContext context;
 
     @Before
     public void setup() throws Exception {
-        c = EasyMock.createControl();
-        context = c.createMock(BundleContext.class);
-        Capture<String> capture = newCapture();
-        expect(context.createFilter(EasyMock.capture(capture)))
-                .andStubAnswer(() -> FrameworkUtil.createFilter(capture.getValue()));
-        context.addServiceListener(anyObject(ServiceListener.class), anyString());
-        ServiceReference ref = c.createMock(ServiceReference.class);
-        ServiceReference[] refs = new ServiceReference[]{ref};
+        context = mock(BundleContext.class);
+        when(context.createFilter(anyString()))
+                .thenAnswer(invocation -> FrameworkUtil.createFilter(invocation.getArgument(0, String.class)));
+        ServiceReference ref = mock(ServiceReference.class);
+        ServiceReference[] refs = new ServiceReference[] { ref };
         String filter = "(" + Constants.OBJECTCLASS + "=" + ConfigLoader.class.getName() + ")";
-        expect(context.getServiceReferences((String) null, filter)).andReturn(refs);
-        expect(context.getService(ref)).andReturn(new FileConfigLoader());
+        when(context.getServiceReferences((String) null, filter)).thenReturn(refs);
+        when(context.getService(ref)).thenReturn(new FileConfigLoader());
     }
 
     @Test
     public void testUpdatedAndDeleted() throws Exception {
-        ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        ConnectionFactoryFactory cff = expectTracked(context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
         ConnectionFactory cf = expectConnectionFactoryCreated(cff);
         ServiceRegistration sreg = expectRegistration(cf);
 
@@ -86,42 +79,28 @@ public class ConnectionFactoryConfigManagerTest {
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "mycfname");
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_TYPE, "artemis");
 
-        // Test config created
-        c.replay();
-
         ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
 
         cfManager.updated(TESTPID, properties);
+        verify(context).addServiceListener(any(ServiceListener.class), eq(ARTEMIS_CFF_FILTER));
 
-        c.verify();
-
-        c.reset();
-
-        context.removeServiceListener(anyObject(ServiceListener.class));
-        expectLastCall().atLeastOnce();
-        sreg.unregister();
-        expectLastCall();
-        expect(context.ungetService(anyObject(ServiceReference.class))).andReturn(true).atLeastOnce();
-        // Test config removed
-        c.replay();
         cfManager.updated(TESTPID, null);
 
-        c.verify();
+        verify(sreg).unregister();
+        verify(context).removeServiceListener(any(ServiceListener.class));
+        verify(context).ungetService(any(ServiceReference.class));
     }
 
     @Test
     public void testEncryptor() throws Exception {
-        final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
-        ConnectionFactory cf = c.createMock(ConnectionFactory.class);
-        Capture<Map<String, Object>> capturedProps = newCapture();
-        expect(cff.createConnectionFactory(EasyMock.capture(capturedProps))).andReturn(cf);
+        final ConnectionFactoryFactory cff = expectTracked(context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        ConnectionFactory cf = mock(ConnectionFactory.class);
+        ArgumentCaptor<Map> capturedProps = ArgumentCaptor.forClass(Map.class);
+        when(cff.createConnectionFactory(capturedProps.capture())).thenReturn(cf);
         expectRegistration(cf);
 
-        StringEncryptor encryptor = expectTracked(c, context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
-        expect(encryptor.decrypt("ciphertext")).andReturn("password");
-
-        // Test config created
-        c.replay();
+        StringEncryptor encryptor = expectTracked(context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
+        when(encryptor.decrypt("ciphertext")).thenReturn("password");
 
         ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
 
@@ -131,7 +110,7 @@ public class ConnectionFactoryConfigManagerTest {
         properties.put(ConnectionFactoryFactory.JMS_CONNECTIONFACTORY_NAME, "mycfname");
         properties.put(ConnectionFactoryFactory.JMS_PASSWORD, "ENC(ciphertext)");
         cfManager.updated(TESTPID, properties);
-        c.verify();
+        verify(context).addServiceListener(any(ServiceListener.class), eq(ARTEMIS_CFF_FILTER));
 
         // the encrypted value is still encrypted
         assertEquals("ENC(ciphertext)", properties.get(ConnectionFactoryFactory.JMS_PASSWORD));
@@ -141,14 +120,11 @@ public class ConnectionFactoryConfigManagerTest {
 
     @Test
     public void testEncryptorWithExternalSecret() throws Exception {
-        final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        final ConnectionFactoryFactory cff = expectTracked(context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
         ConnectionFactory cf = expectConnectionFactoryCreated(cff);
         expectRegistration(cf);
-        StringEncryptor encryptor = expectTracked(c, context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
-        expect(encryptor.decrypt("ciphertext")).andReturn("password");
-
-        // Test config created
-        c.replay();
+        StringEncryptor encryptor = expectTracked(context, StringEncryptor.class, "(objectClass=org.jasypt.encryption.StringEncryptor)");
+        when(encryptor.decrypt("ciphertext")).thenReturn("password");
 
         ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
 
@@ -160,7 +136,7 @@ public class ConnectionFactoryConfigManagerTest {
                 .createExternalSecret("ENC(ciphertext)") + ")";
         properties.put(ConnectionFactoryFactory.JMS_PASSWORD, externalEncryptedValue);
         cfManager.updated(TESTPID, properties);
-        c.verify();
+        verify(context).addServiceListener(any(ServiceListener.class), eq(ARTEMIS_CFF_FILTER));
 
         // the encrypted/external value is still encrypted/external
         assertEquals(externalEncryptedValue, properties.get(ConnectionFactoryFactory.JMS_PASSWORD));
@@ -176,7 +152,7 @@ public class ConnectionFactoryConfigManagerTest {
      */
     @Test
     public void testHiddenAndPropagation() throws Exception {
-        final ConnectionFactoryFactory cff = expectTracked(c, context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
+        final ConnectionFactoryFactory cff = expectTracked(context, ConnectionFactoryFactory.class, ARTEMIS_CFF_FILTER);
 
         final String keyHiddenJmsPassword = "." + ConnectionFactoryFactory.JMS_PASSWORD;
         final String keyNonlocalProperty = "nonlocal.property";
@@ -220,41 +196,33 @@ public class ConnectionFactoryConfigManagerTest {
         Hashtable<String, String> expectedServiceProperties = (Hashtable<String, String>) properties.clone();
         expectedServiceProperties.remove(keyHiddenJmsPassword);
         expectedServiceProperties.put("osgi.jndi.service.name", valueConnectionFactoryName);
-        ServiceRegistration sreg = c.createMock(ServiceRegistration.class);
-        expect(context.registerService(anyString(), eq(cf), eq(expectedServiceProperties))).andReturn(sreg);
-
-        // Test config created
-        c.replay();
+        ServiceRegistration sreg = mock(ServiceRegistration.class);
+        when(context.registerService(anyString(), eq(cf), eq(expectedServiceProperties))).thenReturn(sreg);
 
         ConnectionFactoryConfigManager cfManager = new ConnectionFactoryConfigManager(context, new ExternalConfigLoader(context));
 
         cfManager.updated(TESTPID, properties);
-        c.verify();
+        verify(context).addServiceListener(any(ServiceListener.class), eq(ARTEMIS_CFF_FILTER));
     }
 
-    private <T> T expectTracked(IMocksControl c, BundleContext context, Class<T> iface, String expectedFilter)
-            throws InvalidSyntaxException {
-        final T serviceMock = c.createMock(iface);
-        ServiceReference ref = c.createMock(ServiceReference.class);
-        context.addServiceListener(anyObject(ServiceListener.class), eq(expectedFilter));
-        expectLastCall();
-        ServiceReference[] refs = new ServiceReference[] {
-                ref
-        };
-        expect(context.getServiceReferences((String) null, expectedFilter)).andReturn(refs);
-        expect(context.getService(ref)).andReturn(serviceMock);
+    private <T> T expectTracked(BundleContext context, Class<T> iface, String expectedFilter) throws InvalidSyntaxException {
+        final T serviceMock = mock(iface);
+        ServiceReference ref = mock(ServiceReference.class);
+        ServiceReference[] refs = new ServiceReference[] { ref };
+        when(context.getServiceReferences((String) null, expectedFilter)).thenReturn(refs);
+        when(context.getService(ref)).thenReturn(serviceMock);
         return serviceMock;
     }
 
     private ConnectionFactory expectConnectionFactoryCreated(final ConnectionFactoryFactory cff) throws SQLException {
-        ConnectionFactory cf = c.createMock(ConnectionFactory.class);
-        expect(cff.createConnectionFactory(anyObject(Map.class))).andReturn(cf);
+        ConnectionFactory cf = mock(ConnectionFactory.class);
+        when(cff.createConnectionFactory(any(Map.class))).thenReturn(cf);
         return cf;
     }
 
     private ServiceRegistration expectRegistration(ConnectionFactory cf) {
-        ServiceRegistration sreg = c.createMock(ServiceRegistration.class);
-        expect(context.registerService(anyString(), eq(cf), anyObject(Dictionary.class))).andReturn(sreg);
+        ServiceRegistration sreg = mock(ServiceRegistration.class);
+        when(context.registerService(anyString(), eq(cf), any(Dictionary.class))).thenReturn(sreg);
         return sreg;
     }
 
