@@ -15,12 +15,12 @@
  */
 package org.ops4j.pax.jms.activemq;
 
+import java.util.Hashtable;
+
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-
-import java.util.Hashtable;
 
 /**
  * Created by gnodet on 19/07/2017.

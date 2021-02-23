@@ -30,7 +30,6 @@ import org.ops4j.pax.jms.config.ConfigLoader;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 
 import static org.junit.Assert.assertEquals;

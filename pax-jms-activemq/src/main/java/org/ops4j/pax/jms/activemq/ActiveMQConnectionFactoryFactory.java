@@ -15,10 +15,8 @@
  */
 package org.ops4j.pax.jms.activemq;
 
-import org.apache.activemq.ActiveMQSslConnectionFactory;
-import org.apache.activemq.ActiveMQXASslConnectionFactory;
-import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
-
+import java.util.HashMap;
+import java.util.Map;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSContext;
@@ -27,8 +25,10 @@ import javax.jms.JMSRuntimeException;
 import javax.jms.XAConnection;
 import javax.jms.XAConnectionFactory;
 import javax.jms.XAJMSContext;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.apache.activemq.ActiveMQSslConnectionFactory;
+import org.apache.activemq.ActiveMQXASslConnectionFactory;
+import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 
 public class ActiveMQConnectionFactoryFactory implements ConnectionFactoryFactory {
 

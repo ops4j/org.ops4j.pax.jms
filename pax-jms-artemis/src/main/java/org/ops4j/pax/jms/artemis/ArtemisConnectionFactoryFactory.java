@@ -15,6 +15,13 @@
  */
 package org.ops4j.pax.jms.artemis;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSRuntimeException;
+import javax.jms.XAConnectionFactory;
+
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQXAConnectionFactory;
 import org.apache.activemq.artemis.utils.uri.BeanSupport;
@@ -23,13 +30,6 @@ import org.apache.qpid.jms.util.PropertyUtil;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSRuntimeException;
-import javax.jms.XAConnectionFactory;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 public class ArtemisConnectionFactoryFactory implements ConnectionFactoryFactory {
 

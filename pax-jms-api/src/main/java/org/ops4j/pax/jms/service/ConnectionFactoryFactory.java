@@ -15,10 +15,10 @@
  */
 package org.ops4j.pax.jms.service;
 
+import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSRuntimeException;
 import javax.jms.XAConnectionFactory;
-import java.util.Map;
 
 /**
  * A factory for JMS {@link ConnectionFactory} and {@link XAConnectionFactory}. It's an equivalent of standard OSGi JDBC

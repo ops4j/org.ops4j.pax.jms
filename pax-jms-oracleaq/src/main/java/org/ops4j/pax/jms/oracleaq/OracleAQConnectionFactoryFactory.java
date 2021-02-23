@@ -17,7 +17,6 @@ package org.ops4j.pax.jms.oracleaq;
 
 import java.util.Map;
 import java.util.Properties;
-
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSRuntimeException;
 import javax.jms.XAConnectionFactory;

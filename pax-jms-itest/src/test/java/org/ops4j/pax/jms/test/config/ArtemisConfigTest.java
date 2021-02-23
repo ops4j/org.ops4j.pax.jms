@@ -176,10 +176,10 @@ public class ArtemisConfigTest extends AbstractJmsTest {
         ServiceTracker<ConnectionFactory, ConnectionFactory> tracker2 = new ServiceTracker<>(context, context.createFilter("(&(objectClass=" + ConnectionFactory.class.getName() + ")(osgi.jndi.service.name=cf2))"), null);
         tracker1.open();
         tracker2.open();
-        ConnectionFactory ConnectionFactory1 = tracker1.waitForService(2000);
-        ConnectionFactory ConnectionFactory2 = tracker2.waitForService(2000);
-        assertConnectionFactoryWorks(ConnectionFactory1);
-        assertConnectionFactoryWorks(ConnectionFactory2);
+        ConnectionFactory cf1 = tracker1.waitForService(2000);
+        ConnectionFactory cf2 = tracker2.waitForService(2000);
+        assertConnectionFactoryWorks(cf1);
+        assertConnectionFactoryWorks(cf2);
         assertServicePropertiesPresent(tracker1.getServiceReference(), "cf1");
         assertServicePropertiesPresent(tracker2.getServiceReference(), "cf2");
 
