@@ -17,8 +17,10 @@ package org.ops4j.pax.jms.config.impl;
 
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.ops4j.pax.jms.service.ConnectionFactoryFactory;
@@ -174,7 +176,8 @@ public class ConnectionFactoryConfigManager implements ManagedServiceFactory {
     }
 
     synchronized void destroy() {
-        for (String pid : trackers.keySet()) {
+        Set<String> pidsToDestroy = new HashSet<>(trackers.keySet());
+        for (String pid : pidsToDestroy) {
             deleted(pid);
         }
     }
