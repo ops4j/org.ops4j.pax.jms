@@ -84,6 +84,10 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.ops4j.pax.jms.activemq.Activator</Bundle-Activator>
+                        <Import-Package>
+                            org.apache.activemq;version="[5.10,6)",
+                            *
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

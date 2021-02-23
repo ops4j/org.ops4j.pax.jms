@@ -3,4 +3,5 @@ target
 *.iml
 activemq-data/
 pax-jms-artemis/data/
+pax-jms-itest/HornetqJournalStore/
 

@@ -49,6 +49,7 @@
                     <instructions>
                         <Bundle-Activator>org.ops4j.pax.jms.ibmmq.Activator</Bundle-Activator>
                         <Import-Package>
+                            javax.transaction;version="[1.1,2)",
                             com.ibm.mq.jms,
                             *
                         </Import-Package>

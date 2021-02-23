@@ -143,6 +143,10 @@
         <!-- versions of Maven dependencies (sorted and groupped) -->
 
         <version.biz.aQute.bnd>5.2.0</version.biz.aQute.bnd>
+        <version.com.google.guava>30.1-jre</version.com.google.guava>
+        <version.com.google.guava.failureaccess>1.0.1</version.com.google.guava.failureaccess>
+        <version.commons-beanutils>1.9.4</version.commons-beanutils>
+        <version.commons-collections>3.2.2</version.commons-collections>
         <version.io.netty>4.1.59.Final</version.io.netty>
 
         <version.javax.el>3.0.0</version.javax.el>
@@ -151,27 +155,51 @@
         <version.org.apache.servicemix.bundles.javax-inject>1_3</version.org.apache.servicemix.bundles.javax-inject>
         <version.javax.interceptor>1.2.2</version.javax.interceptor>
         <version.javax.jms>2.0.1</version.javax.jms>
+        <version.javax.mail>1.6.2</version.javax.mail>
+        <version.com.sun.mail>1.6.2</version.com.sun.mail>
+        <version.javax.json>1.1.4</version.javax.json>
         <version.javax.transaction>1.2</version.javax.transaction>
+        <version.org.apache.geronimo.specs.resource>1.0</version.org.apache.geronimo.specs.resource>
         <version.junit>4.13.1</version.junit>
 
         <version.osgi.cmpn>6.0.0</version.osgi.cmpn>
         <version.osgi.core>6.0.0</version.osgi.core>
+        <version.org.osgi.service.component>1.3.0</version.org.osgi.service.component>
+        <version.org.osgi.util.function>1.1.0</version.org.osgi.util.function>
+        <version.org.osgi.util.promise>1.1.1</version.org.osgi.util.promise>
 
         <version.org.apache.activemq>5.16.1</version.org.apache.activemq>
         <version.org.apache.activemq.artemis>2.17.0</version.org.apache.activemq.artemis>
+        <version.org.apache.activemq.artemis.native>1.0.2</version.org.apache.activemq.artemis.native>
+        <version.org.apache.aries.util>1.1.3</version.org.apache.aries.util>
         <version.org.apache.commons.pool2>2.9.0</version.org.apache.commons.pool2>
+        <version.org.apache.commons.configuration2>2.7</version.org.apache.commons.configuration2>
+        <version.org.apache.commons.lang3>3.11</version.org.apache.commons.lang3>
+        <version.org.apache.commons.text>1.9</version.org.apache.commons.text>
+        <version.org.apache.felix.configadmin>1.9.20</version.org.apache.felix.configadmin>
+        <version.org.apache.felix.scr>2.1.26</version.org.apache.felix.scr>
+        <version.org.apache.felix.framework>5.6.12</version.org.apache.felix.framework>
+        <version.org.apache.geronimo.specs.j2ee-connector_1.6>1.0</version.org.apache.geronimo.specs.j2ee-connector_1.6>
         <version.org.apache.geronimo.specs.management>1.0.1</version.org.apache.geronimo.specs.management>
+        <version.org.apache.johnzon>0.9.5</version.org.apache.johnzon>
+        <version.org.jctools>2.1.2</version.org.jctools>
         <version.org.apache.logging.log4j>2.14.0</version.org.apache.logging.log4j>
         <version.org.apache.qpid>0.56.0</version.org.apache.qpid>
         <version.org.apache.qpid.proton-j>0.33.8</version.org.apache.qpid.proton-j>
         <version.org.apache.servicemix.bundles.jasypt>1.9.3_1</version.org.apache.servicemix.bundles.jasypt>
+        <version.org.apache.servicemix.bundles.javax-inject>1_3</version.org.apache.servicemix.bundles.javax-inject>
         <version.org.fusesource.hawtbuf>1.11</version.org.fusesource.hawtbuf>
         <version.org.jboss.narayana>5.10.6.Final</version.org.jboss.narayana>
         <version.org.jboss.transaction>7.6.0.Final</version.org.jboss.transaction>
+        <!-- Artemis 2.17 works with JGroups [3.6,4.0) -->
+        <version.org.jgroups>3.6.20.Final</version.org.jgroups>
         <version.org.messaginghub.pooled-jms>1.2.1</version.org.messaginghub.pooled-jms>
         <version.org.mockito>3.7.7</version.org.mockito>
         <version.org.slf4j>1.7.30</version.org.slf4j>
+        <version.org.ops4j.pax.exam>4.13.4</version.org.ops4j.pax.exam>
+        <version.org.ops4j.pax.logging>1.11.8</version.org.ops4j.pax.logging>
         <version.org.ops4j.pax.transx>0.5.0</version.org.ops4j.pax.transx>
+        <version.org.ops4j.pax.url>2.6.6</version.org.ops4j.pax.url>
 
         <version.org.apache.karaf>4.2.10</version.org.apache.karaf>
         <easymock.version>3.4</easymock.version>
@@ -196,6 +224,8 @@
         <module>pax-jms-pool-transx</module>
 
         <module>pax-jms-features</module>
+
+        <module>pax-jms-itest</module>
     </modules>
 
     <build>
@@ -457,13 +487,100 @@
                 <artifactId>pax-jms-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-activemq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-artemis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-pool-pooledjms</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-pool-narayana</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.jms</groupId>
+                <artifactId>pax-jms-pool-transx</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- Other pax-* artifacts -->
 
             <dependency>
                 <groupId>org.ops4j.pax.transx</groupId>
+                <artifactId>pax-transx-tm-api</artifactId>
+                <version>${version.org.ops4j.pax.transx}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.transx</groupId>
                 <artifactId>pax-transx-jms</artifactId>
                 <version>${version.org.ops4j.pax.transx}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.transx</groupId>
+                <artifactId>pax-transx-connector</artifactId>
+                <version>${version.org.ops4j.pax.transx}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-junit4</artifactId>
+                <version>${version.org.ops4j.pax.exam}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>biz.aQute.bnd</groupId>
+                        <artifactId>bndlib</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam</artifactId>
+                <version>${version.org.ops4j.pax.exam}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-cm</artifactId>
+                <version>${version.org.ops4j.pax.exam}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-container-native</artifactId>
+                <version>${version.org.ops4j.pax.exam}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-container-karaf</artifactId>
+                <version>${version.org.ops4j.pax.exam}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-link-mvn</artifactId>
+                <version>${version.org.ops4j.pax.exam}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-aether</artifactId>
+                <version>${version.org.ops4j.pax.url}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-wrap</artifactId>
+                <version>${version.org.ops4j.pax.url}</version>
             </dependency>
 
             <!-- OSGi -->
@@ -478,6 +595,24 @@
                 <artifactId>osgi.cmpn</artifactId>
                 <version>${version.osgi.cmpn}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.component</artifactId>
+                <version>${version.org.osgi.service.component}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.util.function</artifactId>
+                <version>${version.org.osgi.util.function}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.util.promise</artifactId>
+                <version>${version.org.osgi.util.promise}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.karaf.features</groupId>
                 <artifactId>framework</artifactId>
@@ -513,12 +648,64 @@
                 <classifier>features</classifier>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.framework</artifactId>
+                <version>${version.org.apache.felix.framework}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.configadmin</artifactId>
+                <version>${version.org.apache.felix.configadmin}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr</artifactId>
+                <version>${version.org.apache.felix.scr}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.aries</groupId>
+                <artifactId>org.apache.aries.util</artifactId>
+                <version>${version.org.apache.aries.util}</version>
+            </dependency>
+
             <!-- APIs -->
 
+            <dependency>
+                <groupId>javax.json</groupId>
+                <artifactId>javax.json-api</artifactId>
+                <version>${version.javax.json}</version>
+            </dependency>
             <dependency>
                 <groupId>javax.jms</groupId>
                 <artifactId>javax.jms-api</artifactId>
                 <version>${version.javax.jms}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${version.javax.mail}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${version.com.sun.mail}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.el</groupId>
+                <artifactId>javax.el-api</artifactId>
+                <version>${version.javax.el}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>${version.javax.enterprise.cdi}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.interceptor</groupId>
+                <artifactId>javax.interceptor-api</artifactId>
+                <version>${version.javax.interceptor}</version>
             </dependency>
             <dependency>
                 <groupId>javax.transaction</groupId>
@@ -530,6 +717,11 @@
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
                 <version>${version.org.apache.geronimo.specs.management}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-j2ee-connector_1.6_spec</artifactId>
+                <version>${version.org.apache.geronimo.specs.j2ee-connector_1.6}</version>
             </dependency>
 
             <!-- Logging -->
@@ -611,6 +803,34 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>artemis-jms-client-osgi</artifactId>
+                <version>${version.org.apache.activemq.artemis}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.geronimo.specs</groupId>
+                        <artifactId>geronimo-jms_2.0_spec</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>artemis-core-client-osgi</artifactId>
+                <version>${version.org.apache.activemq.artemis}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>artemis-server-osgi</artifactId>
+                <version>${version.org.apache.activemq.artemis}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-artemis-native</artifactId>
+                <version>${version.org.apache.activemq.artemis.native}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
                 <version>${version.io.netty}</version>
@@ -669,16 +889,61 @@
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
-                <artifactId>netty-transport-unix-common</artifactId>
+                <artifactId>netty-transport-native-unix-common</artifactId>
+                <version>${version.io.netty}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-kqueue</artifactId>
                 <version>${version.io.netty}</version>
             </dependency>
 
             <!-- Other -->
 
             <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.com.google.guava}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>failureaccess</artifactId>
+                <version>${version.com.google.guava.failureaccess}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${version.commons-beanutils}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${version.commons-collections}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>${version.org.jgroups}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.johnzon</groupId>
+                <artifactId>johnzon-core</artifactId>
+                <version>${version.org.apache.johnzon}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jctools</groupId>
+                <artifactId>jctools-core</artifactId>
+                <version>${version.org.jctools}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.jasypt</artifactId>
                 <version>${version.org.apache.servicemix.bundles.jasypt}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
+                <version>${version.org.apache.servicemix.bundles.javax-inject}</version>
             </dependency>
 
             <dependency>
@@ -697,10 +962,30 @@
                 <artifactId>commons-pool2</artifactId>
                 <version>${version.org.apache.commons.pool2}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-configuration2</artifactId>
+                <version>${version.org.apache.commons.configuration2}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${version.org.apache.commons.lang3}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${version.org.apache.commons.text}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.jboss.narayana.jts</groupId>
                 <artifactId>narayana-jts-integration</artifactId>
+                <version>${version.org.jboss.narayana}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.narayana.osgi</groupId>
+                <artifactId>narayana-osgi-jta</artifactId>
                 <version>${version.org.jboss.narayana}</version>
             </dependency>
             <dependency>
