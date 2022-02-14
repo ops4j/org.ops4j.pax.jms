@@ -170,7 +170,8 @@
         <version.org.osgi.util.promise>1.2.0</version.org.osgi.util.promise>
 
         <version.org.apache.activemq>5.16.3</version.org.apache.activemq>
-        <version.org.apache.activemq.artemis>2.17.0</version.org.apache.activemq.artemis>
+        <!-- Artemis 2.20.0 is JDK11+ -->
+        <version.org.apache.activemq.artemis>2.19.1</version.org.apache.activemq.artemis>
         <version.org.apache.activemq.artemis.native>1.0.2</version.org.apache.activemq.artemis.native>
         <version.org.apache.aries.util>1.1.3</version.org.apache.aries.util>
         <version.org.apache.commons.pool2>2.11.1</version.org.apache.commons.pool2>
@@ -185,8 +186,9 @@
         <version.org.apache.johnzon>0.9.5</version.org.apache.johnzon>
         <version.org.jctools>2.1.2</version.org.jctools>
         <version.org.apache.logging.log4j>2.17.1</version.org.apache.logging.log4j>
-        <version.org.apache.qpid>0.56.0</version.org.apache.qpid>
-        <version.org.apache.qpid.proton-j>0.33.8</version.org.apache.qpid.proton-j>
+        <!-- QPid 1.0.x is JDK11+ -->
+        <version.org.apache.qpid>0.61.0</version.org.apache.qpid>
+        <version.org.apache.qpid.proton-j>0.33.10</version.org.apache.qpid.proton-j>
         <version.org.apache.servicemix.bundles.jasypt>1.9.3_1</version.org.apache.servicemix.bundles.jasypt>
         <version.org.apache.servicemix.bundles.javax-inject>1_3</version.org.apache.servicemix.bundles.javax-inject>
         <version.org.fusesource.hawtbuf>1.11</version.org.fusesource.hawtbuf>
