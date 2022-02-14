@@ -148,7 +148,7 @@
         <version.commons-beanutils>1.9.4</version.commons-beanutils>
         <version.commons-collections>3.2.2</version.commons-collections>
         <version.commons-io>2.11.0</version.commons-io>
-        <version.io.netty>4.1.59.Final</version.io.netty>
+        <version.io.netty>4.1.74.Final</version.io.netty>
 
         <version.javax.el>3.0.0</version.javax.el>
         <version.javax.enterprise.cdi>2.0.SP1</version.javax.enterprise.cdi>
