@@ -95,6 +95,7 @@ public class ArtemisConfigTest extends AbstractJmsTest {
                 mvnBundle("com.google.guava", "failureaccess"),
                 mvnBundle("javax.json", "javax.json-api"),
                 mvnBundle("javax.mail", "javax.mail-api"),
+                mvnBundle("com.sun.activation", "javax.activation"),
                 mvnBundle("com.sun.mail", "javax.mail"),
                 mvnBundle("io.netty", "netty-buffer"),
                 mvnBundle("io.netty", "netty-codec"),
