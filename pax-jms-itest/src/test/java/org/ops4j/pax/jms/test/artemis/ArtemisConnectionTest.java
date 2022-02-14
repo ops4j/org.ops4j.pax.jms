@@ -102,9 +102,13 @@ public class ArtemisConnectionTest extends AbstractJmsTest {
                 mvnBundle("io.netty", "netty-handler-proxy"),
                 mvnBundle("io.netty", "netty-resolver"),
                 mvnBundle("io.netty", "netty-transport"),
-                mavenBundle("io.netty", "netty-transport-native-epoll").classifier("linux-x86_64").versionAsInProject(),
+                mvnBundle("io.netty", "netty-tcnative-classes"),
+                mavenBundle("io.netty", "netty-transport-classes-epoll").versionAsInProject(),
+                mavenBundle("io.netty", "netty-transport-native-epoll").classifier("linux-x86_64").versionAsInProject().noStart(),
                 mvnBundle("io.netty", "netty-transport-native-unix-common"),
+                mvnBundle("io.netty", "netty-transport-classes-kqueue"),
                 mvnBundle("io.netty", "netty-transport-native-kqueue"),
+                mvnBundle("org.apache.activemq", "artemis-quorum-api"),
                 mvnBundle("org.apache.activemq", "artemis-server-osgi")
         );
     }

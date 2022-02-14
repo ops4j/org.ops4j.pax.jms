@@ -114,7 +114,7 @@ public abstract class AbstractJmsTest {
                 frameworkProperty("felix.log.level").value("1"),
 
                 bootDelegationPackage("sun.misc"),
-                systemPackage("javax.transaction;version=1.1.0"),
+                systemPackage("javax.transaction;version=1.3.0"),
                 systemPackage("javax.transaction.xa;version=1.1.0"),
                 systemPackage("sun.misc"),
 
