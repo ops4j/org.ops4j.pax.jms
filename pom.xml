@@ -143,10 +143,11 @@
         <!-- versions of Maven dependencies (sorted and groupped) -->
 
         <version.biz.aQute.bnd>6.1.0</version.biz.aQute.bnd>
-        <version.com.google.guava>30.1-jre</version.com.google.guava>
+        <version.com.google.guava>31.0.1-jre</version.com.google.guava>
         <version.com.google.guava.failureaccess>1.0.1</version.com.google.guava.failureaccess>
         <version.commons-beanutils>1.9.4</version.commons-beanutils>
         <version.commons-collections>3.2.2</version.commons-collections>
+        <version.commons-io>2.11.0</version.commons-io>
         <version.io.netty>4.1.59.Final</version.io.netty>
 
         <version.javax.el>3.0.0</version.javax.el>
@@ -197,18 +198,13 @@
         <version.org.messaginghub.pooled-jms>1.2.3</version.org.messaginghub.pooled-jms>
         <version.org.mockito>4.3.1</version.org.mockito>
         <version.org.slf4j>1.7.35</version.org.slf4j>
-        <version.org.ops4j.pax.exam>4.13.4</version.org.ops4j.pax.exam>
+        <version.org.ops4j.pax.exam>4.13.5</version.org.ops4j.pax.exam>
         <version.org.ops4j.pax.logging>1.11.14</version.org.ops4j.pax.logging>
+        <version.org.ops4j.pax.swissbox>1.8.5</version.org.ops4j.pax.swissbox>
         <version.org.ops4j.pax.transx>0.5.2</version.org.ops4j.pax.transx>
         <version.org.ops4j.pax.url>2.6.11</version.org.ops4j.pax.url>
 
         <version.org.apache.karaf>4.2.15</version.org.apache.karaf>
-        <easymock.version>3.4</easymock.version>
-        <logback.version>1.0.9</logback.version>
-        <ops4j.base.version>1.5.1</ops4j.base.version>
-        <pax.exam.version>4.10.0</pax.exam.version>
-        <pax.swissbox.version>1.8.2</pax.swissbox.version>
-        <pax.url.version>2.6.2</pax.url.version>
     </properties>
 
     <modules>
@@ -574,6 +570,31 @@
                 <version>${version.org.ops4j.pax.exam}</version>
             </dependency>
             <dependency>
+                <groupId>org.ops4j.pax.swissbox</groupId>
+                <artifactId>pax-swissbox-bnd</artifactId>
+                <version>${version.org.ops4j.pax.swissbox}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.swissbox</groupId>
+                <artifactId>pax-swissbox-core</artifactId>
+                <version>${version.org.ops4j.pax.swissbox}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.swissbox</groupId>
+                <artifactId>pax-swissbox-lifecycle</artifactId>
+                <version>${version.org.ops4j.pax.swissbox}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.swissbox</groupId>
+                <artifactId>pax-swissbox-property</artifactId>
+                <version>${version.org.ops4j.pax.swissbox}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.swissbox</groupId>
+                <artifactId>pax-swissbox-tracker</artifactId>
+                <version>${version.org.ops4j.pax.swissbox}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.ops4j.pax.url</groupId>
                 <artifactId>pax-url-aether</artifactId>
                 <version>${version.org.ops4j.pax.url}</version>
@@ -581,6 +602,16 @@
             <dependency>
                 <groupId>org.ops4j.pax.url</groupId>
                 <artifactId>pax-url-wrap</artifactId>
+                <version>${version.org.ops4j.pax.url}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-classpath</artifactId>
+                <version>${version.org.ops4j.pax.url}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-link</artifactId>
                 <version>${version.org.ops4j.pax.url}</version>
             </dependency>
 
@@ -773,6 +804,10 @@
                         <groupId>org.apache.geronimo.specs</groupId>
                         <artifactId>geronimo-jms_1.1_spec</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -791,6 +826,24 @@
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>artemis-junit</artifactId>
                 <version>${version.org.apache.activemq.artemis}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.errorprone</groupId>
+                        <artifactId>error_prone_annotations</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.j2objc</groupId>
+                        <artifactId>j2objc-annotations</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.micrometer</groupId>
+                        <artifactId>micrometer-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.qpid</groupId>
@@ -823,6 +876,12 @@
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>artemis-server-osgi</artifactId>
                 <version>${version.org.apache.activemq.artemis}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.micrometer</groupId>
+                        <artifactId>micrometer-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -902,9 +961,24 @@
             <!-- Other -->
 
             <dependency>
+                <!-- test dependency for pax-jms-artemis -->
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${version.com.google.guava}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.errorprone</groupId>
+                        <artifactId>error_prone_annotations</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.j2objc</groupId>
+                        <artifactId>j2objc-annotations</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -920,6 +994,11 @@
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
                 <version>${version.commons-collections}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${version.commons-io}</version>
             </dependency>
             <dependency>
                 <groupId>org.jgroups</groupId>
