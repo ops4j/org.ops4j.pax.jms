@@ -28,7 +28,7 @@
 
     <groupId>org.ops4j.pax</groupId>
     <artifactId>jms</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.2</version>
     <packaging>pom</packaging>
 
     <name>OPS4J Pax JMS (Reactor POM)</name>
@@ -74,7 +74,8 @@
         <connection>scm:git:https://github.com/ops4j/org.ops4j.pax.jms.git</connection>
         <developerConnection>scm:git:https://github.com/ops4j/org.ops4j.pax.jms.git</developerConnection>
         <url>https://github.com/ops4j/org.ops4j.pax.jms/tree/master</url>
-    </scm>
+      <tag>jms-1.1.2</tag>
+  </scm>
 
     <developers>
         <developer>
